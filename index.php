@@ -44,6 +44,16 @@ $taskList = array(
 
 );
 
+function projectsInTaskListCount($taskList, $projectName){
+    $projectCount = 0;
+    foreach ($taskList as $task) {
+        if ($task['category'] === $projectName) {
+            $projectCount++;
+        }
+    }
+    return $projectCount;
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -92,7 +102,7 @@ $taskList = array(
                             echo '
                             <li class="main-navigation__list-item">
                                 <a class="main-navigation__list-item-link" href="#">'.$project.'</a>
-                                <span class="main-navigation__list-item-count">0</span>
+                                <span class="main-navigation__list-item-count">'.projectsInTaskListCount($taskList, $project).'</span>
                             </li>
                             ';
                         }
@@ -142,7 +152,7 @@ $taskList = array(
                             if ($show_complete_tasks === 0 && $task['isComplete'] === true) {
                                 continue;
                             }
-                            
+
                             echo '
                                 <tr class="tasks__item task';
                                 if ($task['isComplete']) {

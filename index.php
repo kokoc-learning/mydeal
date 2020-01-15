@@ -18,6 +18,7 @@ $show_complete_tasks = rand(0, 1);
 
 <div class="page-wrapper">
     <div class="container container--with-sidebar">
+    
         <header class="main-header">
             <a href="/">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">

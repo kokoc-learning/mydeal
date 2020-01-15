@@ -31,6 +31,17 @@ function include_template($name, $data){
 
 }
 
+function deadLineLeftHours($deadLine) {
+    if ($deadLine === null) {
+        return 0;
+    }
+    $deadLineDate = strtotime($deadLine);
+    $nowDate = time();
+    $diffTime = $deadLineDate - $nowDate;
+    $secsInHour = 3600;
+
+    return floor($diffTime / $secsInHour);
+}
 
 ?>
 

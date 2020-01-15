@@ -53,9 +53,10 @@
                 </div>
 
                 <table class="tasks">
+
                     <?php
                         foreach ($taskList as $task) {
-
+                            $deadLineIsComing = deadLineLeftHours($task['deadline']);
                             if ($show_complete_tasks === 0 && $task['isComplete'] === true) {
                                 continue;
                             }
@@ -65,6 +66,11 @@
                                 if ($task['isComplete']) {
                                     echo ' task--completed';
                                 }
+
+                                if ($deadLineIsComing <= 24 && $deadLineIsComing > 0) {
+                                    echo ' task--important';
+                                }
+
                                 echo '">
                                     <td class="task__select">
                                         <label class="checkbox task__checkbox">
@@ -77,11 +83,19 @@
                                       <a class="download-link" href="#"></a>
                                     </td>
 
-                                    <td class="task__date">'.$task['deadline'].'</td>
+                                    <td class="task__date">';
+                                    // не удержался и прикрутил сообщение, если просрал дедлайн
+                                    if ($deadLineIsComing < 0) {
+                                        echo 'Wasted!';
+                                    } else {
+                                        echo $task['deadline'];
+                                    }
+                                    echo '</td>
                                 </tr>
                             ';
                         }
                     ?>
+                    
                     <!-- <tr class="tasks__item task">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">

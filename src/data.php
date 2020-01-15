@@ -10,31 +10,31 @@ $projectList = array('Входящие','Учеба','Работа','Домаш�
 $taskList = array(
     array (
         'taskName' => 'Собеседование в IT компании',
-        'deadline' =>'01.12.2019',
+        'deadline' =>'03.02.2020',
         'category' => 'Работа',
         'isComplete' => false
     ),
     array (
         'taskName' => 'Выполнить тестовое задание',
-        'deadline' =>'25.12.2019',
+        'deadline' =>'01.02.2020',
         'category' => 'Работа',
         'isComplete' => false
     ),
     array (
         'taskName' => 'Сделать задание первого раздела',
-        'deadline' =>'21.12.2019',
+        'deadline' =>'17.01.2020',
         'category' => 'Учеба',
         'isComplete' => true
     ),
     array (
         'taskName' => 'Встреча с другом',
-        'deadline' =>'22.12.2019',
+        'deadline' =>'17.01.2020',
         'category' => 'Входящие',
         'isComplete' => false
     ),
     array (
         'taskName' => 'Купить корм для кота',
-        'deadline' => null,
+        'deadline' => '15.01.2020',
         'category' => 'Домашние дела',
         'isComplete' => false
     ),

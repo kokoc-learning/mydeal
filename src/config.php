@@ -24,4 +24,8 @@ $resultPage = include_template('layout.php', [
 
 
 print($resultPage);
+
 ?>
+
+
+

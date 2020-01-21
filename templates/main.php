@@ -8,8 +8,8 @@
                         foreach ($projectList as $project) {
                             echo '
                             <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link" href="#">'.$project.'</a>
-                                <span class="main-navigation__list-item-count">'.projectsInTaskListCount($taskList, $project).'</span>
+                                <a class="main-navigation__list-item-link" href="#">'.$project['name'].'</a>
+                                <span class="main-navigation__list-item-count">'.projectsInTaskListCount($taskList, $project['name']).'</span>
                             </li>
                             ';
                         }
@@ -57,7 +57,7 @@
                     <?php
                         foreach ($taskList as $task) {
                             $deadLineIsComing = deadLineLeftHours($task['deadline']);
-                            if ($show_complete_tasks === 0 && $task['isComplete'] === true) {
+                            if ($show_complete_tasks === 0 && intval($task['isComplete']) === 1) {
                                 continue;
                             }
 
@@ -75,7 +75,7 @@
                                     <td class="task__select">
                                         <label class="checkbox task__checkbox">
                                             <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                                            <span class="checkbox__text">'.$task['taskName'].'</span>
+                                            <span class="checkbox__text">'.$task['name'].'</span>
                                         </label>
                                     </td>
 

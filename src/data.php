@@ -7,7 +7,9 @@ $pageName = 'Дела в порядке';
 $userEmail = 'vasya@mail.com';
 
 
-$con = mysqli_connect('localhost', 'root', '','mydealsdb');
+$con = mysqli_connect('localhost', 'root', '','mydealsDB');
+// д
+// $con = mysqli_connect('localhost', 'u0857553_root', 'U0l7D5q1','u0857553_mydealsdb');
 
 if(!$con) {
     echo 'Ошибка подключения к MySQL '. mysqli_connect_error();
@@ -23,12 +25,12 @@ $userName = $userData[0]['name'];
 $userId = $userData[0]['id'];
 
 // запрос списка проектов
-$sqlRes = mysqli_query($con, 'SELECT `name` FROM `project` ORDER BY `name` ');
+$sqlRes = mysqli_query($con, 'SELECT `id`, `name` FROM `project` ORDER BY `name` ');
 $projectList = mysqli_fetch_all($sqlRes, MYSQLI_ASSOC);
 
 // запрос списка задач
 $sqlRes = mysqli_query($con, 
-"SELECT task.name, task.deadline, project.name AS category, task.status AS isComplete 
+"SELECT project.id AS categiryId, task.name, task.deadline, project.name AS category, task.status AS isComplete 
     FROM `task` 
     JOIN `project` ON task.project_id = project.id 
     WHERE task.user_id = '".$userId."' 

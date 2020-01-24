@@ -1,3 +1,7 @@
+-- для сервера
+-- CREATE DATABASE u0857553_mydealsDB;
+
+-- для локального
 CREATE DATABASE mydealsDB;
 
 CREATE TABLE user(

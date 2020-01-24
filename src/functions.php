@@ -43,5 +43,15 @@ function deadLineLeftHours($deadLine) {
     return floor($diffTime / $secsInHour);
 }
 
+// функция проверяет есть ли такой id в базе с проектами
+function projectIdCheck($projectId, $projectList){
+    foreach ($projectList as $project) {
+       if ($project['id'] === $projectId) {
+           return TRUE;
+       }
+    }
+    return FALSE;
+}
+
 ?>
 

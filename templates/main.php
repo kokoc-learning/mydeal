@@ -6,9 +6,17 @@
                     <ul class="main-navigation__list">
                     <?php
                         foreach ($projectList as $project) {
+                            
                             echo '
-                            <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link" href="#">'.$project['name'].'</a>
+                            <li class="main-navigation__list-item';
+
+                            // делаем активным пункт списка проектов
+                            if (isset($_GET['projectid']) && $_GET['projectid'] === $project['id']){
+                                echo ' main-navigation__list-item--active';
+                            }
+
+                            echo '">
+                                <a class="main-navigation__list-item-link" href="index.php?projectid='.$project['id'].'">'.$project['name'].'</a>
                                 <span class="main-navigation__list-item-count">'.projectsInTaskListCount($taskList, $project['name']).'</span>
                             </li>
                             ';
@@ -55,80 +63,67 @@
                 <table class="tasks">
 
                     <?php
-                        foreach ($taskList as $task) {
-                            $deadLineIsComing = deadLineLeftHours($task['deadline']);
-                            if ($show_complete_tasks === 0 && intval($task['isComplete']) === 1) {
-                                continue;
-                            }
-
-                            echo '
-                                <tr class="tasks__item task';
-                                if ($task['isComplete']) {
-                                    echo ' task--completed';
-                                }
-
-                                if ($deadLineIsComing <= 24 && $deadLineIsComing > 0) {
-                                    echo ' task--important';
-                                }
-
-                                echo '">
-                                    <td class="task__select">
-                                        <label class="checkbox task__checkbox">
-                                            <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                                            <span class="checkbox__text">'.$task['name'].'</span>
-                                        </label>
-                                    </td>
-
-                                    <td class="task__file">
-                                      <a class="download-link" href="#"></a>
-                                    </td>
-
-                                    <td class="task__date">';
-                                    // не удержался и прикрутил сообщение, если просрал дедлайн
-                                    if ($deadLineIsComing < 0) {
-                                        echo 'Wasted!';
-                                    } else {
-                                        echo $task['deadline'];
-                                    }
-                                    echo '</td>
-                                </tr>
-                            ';
+                        // если нужный ключ есть в массиве, то...
+                        if(isset($_GET['projectid'])){
+                            $activeProjectId = $_GET['projectid'];
+                            $projectIdIsset = TRUE;
+                        } else {
+                            $projectIdIsset = FALSE;
                         }
+
+                        // проверка корректности id проекта, указанного в параметре запроса
+                        if ( $projectIdIsset && !projectIdCheck($activeProjectId, $projectList)){
+                            echo '404. Page not found';
+                        } else {
+                            foreach ($taskList as $task) {
+                                // далее идет код для фильтра дел по категориям
+                                if ( $projectIdIsset && $activeProjectId !== $task['categiryId']){
+                                    continue;
+                                }
+    
+                                $deadLineIsComing = deadLineLeftHours($task['deadline']);
+                                if ($show_complete_tasks === 0 && intval($task['isComplete']) === 1) {
+                                    continue;
+                                }
+    
+                                echo '
+                                    <tr class="tasks__item task';
+                                    if ($task['isComplete']) {
+                                        echo ' task--completed';
+                                    }
+    
+                                    if ($deadLineIsComing <= 24 && $deadLineIsComing > 0) {
+                                        echo ' task--important';
+                                    }
+    
+                                    echo '">
+                                        <td class="task__select">
+                                            <label class="checkbox task__checkbox">
+                                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
+                                                <span class="checkbox__text">'.$task['name'].'</span>
+                                            </label>
+                                        </td>
+    
+                                        <td class="task__file">
+                                          <a class="download-link" href="#"></a>
+                                        </td>
+    
+                                        <td class="task__date">';
+                                        // не удержался и прикрутил сообщение, если просрал дедлайн
+                                        if ($deadLineIsComing < 0) {
+                                            echo 'Wasted!';
+                                        } else {
+                                            echo $task['deadline'];
+                                        }
+                                        echo '</td>
+                                    </tr>
+                                ';
+                            }
+                        }
+
+                        
                     ?>
                     
-                    <!-- <tr class="tasks__item task">
-                        <td class="task__select">
-                            <label class="checkbox task__checkbox">
-                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                                <span class="checkbox__text">Сделать главную страницу Дела в порядке</span>
-                            </label>
-                        </td>
-
-                        <td class="task__file">
-                            <a class="download-link" href="#">Home.psd</a>
-                        </td>
-
-                        <td class="task__date"></td>
-                        
-                    </tr> -->
-                    <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
-
-                    <?php
-                    if ($show_complete_tasks === 1) {
-                        echo '
-                        <tr class="tasks__item task task--completed">
-                            <td class="task__select">
-                                <label class="checkbox task__checkbox">
-                                    <input class="checkbox__input visually-hidden" type="checkbox" checked>
-                                    <span class="checkbox__text">Записаться на интенсив "Базовый PHP"</span>
-                                </label>
-                            </td>
-                            <td class="task__date">10.10.2019</td>
-                            <td class="task__controls"></td>
-                        </tr>
-                        ';
-                    }
-                    ?>
                    
                 </table>
             </main>

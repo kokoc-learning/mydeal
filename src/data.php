@@ -25,7 +25,7 @@ $userName = $userData[0]['name'];
 $userId = $userData[0]['id'];
 
 // запрос списка проектов
-$sqlRes = mysqli_query($con, 'SELECT `id`, `name` FROM `project` ORDER BY `name` ');
+$sqlRes = mysqli_query($con, 'SELECT `id`, `name` FROM `project` WHERE `user_id` = '.$userId.' ORDER BY `name` ');
 $projectList = mysqli_fetch_all($sqlRes, MYSQLI_ASSOC);
 
 // запрос списка задач
@@ -38,7 +38,29 @@ $sqlRes = mysqli_query($con,
 
 $taskList = mysqli_fetch_all($sqlRes, MYSQLI_ASSOC);
 
-
+$pages = array(
+  'index' => array(
+    'url_key' => '/index.php',
+    'tpl' => 'main.php',
+    'title' => 'Главная страница',
+    'vars' => array(
+      'show_complete_tasks' => $show_complete_tasks, 
+      'projectList' => $projectList, 
+      'taskList' => $taskList
+    )
+  ),
+  'add' => array(
+    'url_key' => '/add.php',
+    'tpl' => 'add.php',
+    'title' => 'Добавить задачу',
+    'vars' => array(
+      'show_complete_tasks' => $show_complete_tasks, 
+      'projectList' => $projectList, 
+      'taskList' => $taskList
+    )
+  )
+); 
+  
 
 // $projectList = array('Входящие','Учеба','Работа','Домашние дела','Авто');
 

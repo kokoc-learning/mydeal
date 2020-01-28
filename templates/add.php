@@ -2,12 +2,31 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_POST['project'])){
-  $form = $_POST;
+  
+  $con = mysqli_connect('localhost', 'root', '','mydealsDB');
 
   $formNameValue = $_POST['name'];
   $formProjectValue = $_POST['project'];
-  $formDateValue = $_POST['date'];
+  $formDeadlineValue = (empty($_POST['date'])) ? NULL : $_POST['date'];
+  
+  $formProjectId = NULL;
+  foreach ($projectList as $value) {
+    if ($value['name'] !== $formProjectValue) {
+      continue;
+    }
+    $formProjectId = $value['id'];
+    break;
+  }
+
+  echo "<br> id - $formProjectId";
+  foreach ($_POST as $key => $value) {
+    echo "<br> key - $key, val - $value";
+    
+
+  }
  
+  $file_url = NULL;
+  
   if (isset($_FILES['file']) && strlen($_FILES['file']['name']) > 0) {
     
     echo "<br> 0 ".strlen($_FILES['file']['name']);
@@ -30,12 +49,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_PO
     $file_href = "<a download href='$file_url'>$file_name</a>";
     echo "<br> 4 ". $file_href;
   }
+  $isValidate = true;
+  if($isValidate) {
+    $dataArray = [$formProjectId, $currentUser['id'], $formNameValue, $formDeadlineValue, $file_url];
+    echo '<br>';
+    print_r($dataArray);
+    $sql = "INSERT INTO `task` (project_id, user_id, name, creation_date, deadline, status, file) VALUES (?, ?, ?, NOW(), ?, 0, ?)";
+    $stmt = db_get_prepare_stmt($con, $sql, $dataArray);
+    $result = mysqli_stmt_execute($stmt);
+    
+
+    // вывод ошибки
+    if($result) {
+      // ошибки нет
+      $pr_id = mysqli_insert_id($con);
+      echo "<br> pr id - $pr_id";
+      echo "<br> result - $result";
+    } else {
+      // Ошибка
+      echo "<br> result - $result";
+    }
+  }
+
+  mysqli_close($con);
 }
 
 
-if(false) {
-  $sql = "INSERT INTO `task` (project_id, user_id, name, creation_date, deadline, status, file) VALUES (?, ?, ?, NOW(), ?, 0, ?)";
-}
+
   
 ?>
 
@@ -74,13 +114,13 @@ if(false) {
 
     <main class="content__main">
     <h2 class="content__main-heading">Добавление задачи</h2>
-
+    
 <form class="form"  action="add.php" method="post" autocomplete="off" enctype = "multipart/form-data">
   <div class="form__row">
     <label class="form__label" for="name">Название <sup>*</sup></label>
     
     <!-- input NAME -->
-    <input class="form__input" type="text" name="name" id="name" value="" placeholder="Введите название" required>
+    <input class="form__input" type="text" name="name" id="name" value="<?= getPostVal('name')?>" placeholder="Введите название">
   </div>
 
   <div class="form__row">

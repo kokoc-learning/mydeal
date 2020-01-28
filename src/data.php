@@ -23,6 +23,8 @@ $sqlRes = mysqli_query($con, "SELECT `id`, `name`, `email` FROM `user` WHERE ema
 $userData = mysqli_fetch_all($sqlRes, MYSQLI_ASSOC);
 $userName = $userData[0]['name'];
 $userId = $userData[0]['id'];
+$currentUser['id'] = $userData[0]['id'];
+$currentUser['name'] = $userData[0]['name'];
 
 // запрос списка проектов
 $sqlRes = mysqli_query($con, 'SELECT `id`, `name` FROM `project` WHERE `user_id` = '.$userId.' ORDER BY `name` ');
@@ -38,6 +40,8 @@ $sqlRes = mysqli_query($con,
 
 $taskList = mysqli_fetch_all($sqlRes, MYSQLI_ASSOC);
 
+mysqli_close($con);
+
 $pages = array(
   'index' => array(
     'url_key' => '/index.php',
@@ -46,7 +50,8 @@ $pages = array(
     'vars' => array(
       'show_complete_tasks' => $show_complete_tasks, 
       'projectList' => $projectList, 
-      'taskList' => $taskList
+      'taskList' => $taskList,
+      'currentUser' => $currentUser
     )
   ),
   'add' => array(
@@ -56,7 +61,8 @@ $pages = array(
     'vars' => array(
       'show_complete_tasks' => $show_complete_tasks, 
       'projectList' => $projectList, 
-      'taskList' => $taskList
+      'taskList' => $taskList,
+      'currentUser' => $currentUser
     )
   )
 ); 

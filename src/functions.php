@@ -100,3 +100,9 @@ function db_get_prepare_stmt($con, $sql, $data = []) {
     return $stmt;
 }
 
+function getPostVal($name){
+    return $_POST[$name] ?? "";
+}
+
+
+?>

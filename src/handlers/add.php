@@ -77,28 +77,34 @@ $dataToTemplate = $thisPage['vars'];
   // далее следует код сохранения таска в БД. Выполняется только если валидация пройдена
   // -----------------------------------------------------------------------------------------
   if($isValidate) {
+    // для безопасности преобразуем строку
     $formNameValue = htmlspecialchars($formNameValue);
+    // формируем массив с данными для передачи в БД
     $dataArray = [$formProjectId, $currentUser['id'], $formNameValue, $formDeadlineValue, $file_url];
-    
+    // коннектимся к БД
     $con = mysqli_connect('localhost', 'root', '','mydealsDB');
-
+    // Строка запроса
     $sql = "INSERT INTO `task` (project_id, user_id, name, creation_date, deadline, status, file) VALUES (?, ?, ?, NOW(), ?, 0, ?)";
+    // используем функцию для подготовки запроса
     $stmt = db_get_prepare_stmt($con, $sql, $dataArray);
+    // выполняем получившееся выражение
     $result = mysqli_stmt_execute($stmt);
-
+    // закрываем коннект
+    mysqli_close($con);
 
     // Если все хорошо с сохранением в БД, то
     if($result) {
-      // ошибки нет, показываем
-      $pageContent = include_template('tomain.php', $dataToTemplate);
+      // ошибки нет, показываем главную страницу
+      header("Location: index.php");
     } else {
       // ошибка есть
       echo 'Ошибка сохранения данных';
     }
-  } else {
-    print_r($errors);
-    $pageContent = include_template($thisPage['tpl'], $dataToTemplate);
-  }
+  } 
+
+  // если валидация не пройдена, то в массивe с данными будет массив с ошибками $dataToTemplate['formErrors']
+  $pageContent = include_template($thisPage['tpl'], $dataToTemplate);
+  
 
   
 

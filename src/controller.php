@@ -7,10 +7,8 @@ $thisPathArr = explode('.', $thisFileName);
 $thisPageName = $thisPathArr[0];
 $thisPage = $pages[$thisPageName];
 
-// определяем переменную контента. пока на всякий случай. мне так спокойней.
-$pageContent = '';
 
-// подключаем нужный обработчик формы, если есть пост-запрос
+// подключаем нужный обработчик формы, если POST
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     include_once(ROOT_PATH . '/src/handlers/' . $thisFileName);
 } else {
@@ -18,12 +16,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pageContent = include_template($thisPage['tpl'], $thisPage['vars']);
 }
 
+
 $resultPage = include_template('layout.php', [
     'pageContent' => $pageContent, 
     'userName' => $userName, 
     'pageName' => $pageName
 ]);
-
 
 print($resultPage);
 ?>

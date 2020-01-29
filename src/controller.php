@@ -2,12 +2,21 @@
 
 $thisPath = $_SERVER['SCRIPT_NAME'];
 $thisPathArr = explode('/', $thisPath);
-$thisPageName = array_pop($thisPathArr);
-$thisPathArr = explode('.', $thisPageName);
+$thisFileName = array_pop($thisPathArr);
+$thisPathArr = explode('.', $thisFileName);
 $thisPageName = $thisPathArr[0];
 $thisPage = $pages[$thisPageName];
 
-$pageContent = include_template('/'.$thisPage['tpl'], $thisPage['vars']);
+// определяем переменную контента. пока на всякий случай. мне так спокойней.
+$pageContent = '';
+
+// подключаем нужный обработчик формы, если есть пост-запрос
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    include_once(ROOT_PATH . '/src/handlers/' . $thisFileName);
+} else {
+    // иначе, если нет пост-запроса, подключаем обычный шаблон
+    $pageContent = include_template($thisPage['tpl'], $thisPage['vars']);
+}
 
 $resultPage = include_template('layout.php', [
     'pageContent' => $pageContent, 

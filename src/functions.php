@@ -104,5 +104,11 @@ function getPostVal($name){
     return $_POST[$name] ?? "";
 }
 
+function deadlineFieldValidation($date){
+    $todayDate = date("Y-m-d");
+    if(isset($date) && $date < $todayDate) {
+       return 'Ошибка даты. Дедлайн уже прошел';
+      }
+}
 
 ?>

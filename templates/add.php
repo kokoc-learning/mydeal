@@ -1,84 +1,9 @@
 
+
 <?php
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_POST['project'])){
-  
-  $con = mysqli_connect('localhost', 'root', '','mydealsDB');
-
-  $formNameValue = $_POST['name'];
-  $formProjectValue = $_POST['project'];
-  $formDeadlineValue = (empty($_POST['date'])) ? NULL : $_POST['date'];
-  
-  $formProjectId = NULL;
-  foreach ($projectList as $value) {
-    if ($value['name'] !== $formProjectValue) {
-      continue;
-    }
-    $formProjectId = $value['id'];
-    break;
-  }
-
-  echo "<br> id - $formProjectId";
-  foreach ($_POST as $key => $value) {
-    echo "<br> key - $key, val - $value";
-    
-
-  }
- 
-  $file_url = NULL;
-  
-  if (isset($_FILES['file']) && strlen($_FILES['file']['name']) > 0) {
-    
-    echo "<br> 0 ".strlen($_FILES['file']['name']);
-
-    // сгенерируем уникальное имя для сохраненного файла
-    // разобьем имя файла из формы (который загрузили) на массив со строками. 
-    // Разделителем будет точка (для выделения расширения файла)
-    $file_name = explode( '.', $_FILES['file']['name']);
-    // сгенерируем имя "прибавим" расширение оригинального файла
-    $file_name = uniqid().'.'.$file_name[1];
-    echo "<br> 1 ". $file_name;
-    
-    $file_path = ROOT_PATH . '/uploads/';
-    echo "<br> 2 ". $file_path;
-
-    $file_url = '/uploads/' . $file_name;
-    echo "<br> 3 ". $file_url;
-    
-    move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
-    $file_href = "<a download href='$file_url'>$file_name</a>";
-    echo "<br> 4 ". $file_href;
-  }
-  $isValidate = true;
-  if($isValidate) {
-    $dataArray = [$formProjectId, $currentUser['id'], $formNameValue, $formDeadlineValue, $file_url];
-    echo '<br>';
-    print_r($dataArray);
-    $sql = "INSERT INTO `task` (project_id, user_id, name, creation_date, deadline, status, file) VALUES (?, ?, ?, NOW(), ?, 0, ?)";
-    $stmt = db_get_prepare_stmt($con, $sql, $dataArray);
-    $result = mysqli_stmt_execute($stmt);
-    
-
-    // вывод ошибки
-    if($result) {
-      // ошибки нет
-      $pr_id = mysqli_insert_id($con);
-      echo "<br> pr id - $pr_id";
-      echo "<br> result - $result";
-    } else {
-      // Ошибка
-      echo "<br> result - $result";
-    }
-  }
-
-  mysqli_close($con);
-}
-
-
-
-  
+$errorNameClass = isset($formErrors['name']) ? 'form__input--error' : '';
+$errorProjectClass = isset($formErrors['project']) ? 'form__input--error' : '';
 ?>
-
 
 <div class="content">
     <section class="content__side">
@@ -104,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_PO
                     ';
                 }
             ?>
-                
+
             </ul>
         </nav>
 
@@ -120,14 +45,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_PO
     <label class="form__label" for="name">Название <sup>*</sup></label>
     
     <!-- input NAME -->
-    <input class="form__input" type="text" name="name" id="name" value="<?= getPostVal('name')?>" placeholder="Введите название">
+    <input class="form__input <?= $errorNameClass?>" type="text" name="name" id="name" value="<?= getPostVal('name')?>" placeholder="Введите название">
+    <?php
+    // если есть ошибка для этого поля, то выводим текст ошибки
+      if(isset($formErrors['name'])) {
+        echo "<p class = 'form__message'>". $formErrors['name']."</p>";
+      }
+    ?>
   </div>
 
   <div class="form__row">
     <label class="form__label" for="project">Проект <sup>*</sup></label>
 
     <!-- input SELECT project -->
-    <select class="form__input form__input--select" name="project" id="project">
+    <select class="form__input form__input--select <?= $errorProjectClass?>" name="project" id="project">
 
       <?php
         foreach ($projectList as $value) {
@@ -142,7 +73,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_PO
     <label class="form__label" for="date">Дата выполнения</label>
 
     <!-- input DATE -->
-    <input class="form__input form__input--date" type="text" name="date" id="date" value="" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+    <input class="form__input form__input--date" type="text" name="date" id="date" value="<?= getPostVal('date')?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+    <?php
+     // если дата не корректна, то выводить текст ошибки
+      if(isset($formErrors['date'])) {
+        echo "<p class = 'form__message'>". $formErrors['date']."</p>";
+      }
+    ?>
   </div>
 
   <div class="form__row">

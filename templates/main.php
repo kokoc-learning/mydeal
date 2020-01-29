@@ -79,7 +79,7 @@
                 } else {
                     foreach ($taskList as $task) {
                         // далее идет код для фильтра дел по категориям
-                        if ( $projectIdIsset && $activeProjectId !== $task['categiryId']){
+                        if ( $projectIdIsset && $activeProjectId !== $task['categoryId']){
                             continue;
                         }
 
@@ -106,9 +106,16 @@
                                     </label>
                                 </td>
 
-                                <td class="task__file">
-                                <a class="download-link" href="#"></a>
-                                </td>
+                                <td class="task__file">';
+
+                                if(isset($task['file'])){
+                                    echo '<a class="download-link" href="';
+                                    echo $task['file'];
+                                    echo '" download></a>';
+                                    
+                                }
+                                
+                                echo '</td>
 
                                 <td class="task__date">';
                                 // не удержался и прикрутил сообщение, если просрал дедлайн

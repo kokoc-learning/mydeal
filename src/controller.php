@@ -7,7 +7,15 @@ $thisPathArr = explode('.', $thisFileName);
 $thisPageName = $thisPathArr[0];
 $thisPage = $pages[$thisPageName];
 
+if($thisPageName === 'logout') {
+    $_SESSION = [];
+    header("Location: index.php");
+}
 
+$isAuthorized = isset($_SESSION['currentUser']) ? TRUE : FALSE;
+$toReg = ($thisPageName === 'authorization' || $thisPageName === 'registration') ? TRUE : FALSE;
+
+if ($isAuthorized || $toReg){
 // подключаем нужный обработчик формы, если POST
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     include_once(ROOT_PATH . '/src/handlers/' . $thisFileName);
@@ -16,11 +24,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pageContent = include_template($thisPage['tpl'], $thisPage['vars']);
 }
 
+} else {
+    $pageContent = include_template('guest.php', []);
+    // $pageContent = include_template($thisPage['tpl'], $thisPage['vars']);
+}
 
 $resultPage = include_template('layout.php', [
     'pageContent' => $pageContent, 
-    'userName' => $userName, 
-    'pageName' => $pageName
+    'currentUser' => $currentUser, 
+    'pageName' => $thisPageName
 ]);
 
 print($resultPage);

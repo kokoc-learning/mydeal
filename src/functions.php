@@ -111,4 +111,8 @@ function deadlineFieldValidation($date){
       }
 }
 
+
+function emailValidation($email){
+
+}
 ?>

@@ -15,7 +15,7 @@ CREATE TABLE user(
 
 CREATE TABLE project(
     id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    name VARCHAR(128) NOT NULL UNIQUE,
+    name VARCHAR(128) NOT NULL,
     user_id INT,
     FOREIGN KEY(user_id) REFERENCES user(id)
 );

@@ -8,7 +8,7 @@ $dataToTemplate = $thisPage['vars'];
   
 
   $formNameValue = $_POST['name'];
-  $formProjectValue = $_POST['project'];
+  $formProjectValue = $_POST['project'] ?? [];
   // если в поле не выбрана дата, то дата равна NULL
   $formDeadlineValue = ($_POST['date']) ? $_POST['date'] : NULL;
   // текущая дата
@@ -65,7 +65,7 @@ $dataToTemplate = $thisPage['vars'];
     // Разделителем будет точка (для выделения расширения файла)
     $file_name = explode( '.', $_FILES['file']['name']);
     // сгенерируем имя "прибавим" расширение оригинального файла
-    $file_name = str_replace(' ', '_', $formNameValue).'_'.uniqid().'.'.$file_name[1];
+    $file_name = 'task_file_'.str_replace(' ', '_', $formNameValue).'_'.uniqid().'.'.$file_name[1];
     // используется для сохранения файла
     $file_path = ROOT_PATH . '/uploads/';
     // используется для записи в БД

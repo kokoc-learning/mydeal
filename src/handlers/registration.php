@@ -1,6 +1,6 @@
 <?php
 
-
+    // эта переменная просто для передачи данных дальше в шаблон. так "удобней"
     $dataToTemplate = $thisPage['vars'];
     // Валидация формы
     // -------------------------------------------------------
@@ -38,7 +38,7 @@
     // 1. последний этап валидации, и, если удачен, то
     // 2. запись в БД
     if (empty($errors)){
-        $con = mysqli_connect('localhost', 'root', '','mydealsDB');
+        $con = mysqli_connect($bd_path, $bd_user, $bd_pass, $bd_name);
 
         if(!$con) {
             die("Connection failed: " . mysqli_connect_error());
@@ -48,6 +48,8 @@
 
         $sql = "SELECT id FROM user WHERE email = '$email'";
         $res = mysqli_query($con, $sql);
+        $users_from_base = mysqli_fetch_all($res, MYSQLI_ASSOC);
+        // print_r($users_from_base);
 
         if(mysqli_num_rows($res) > 0){
             $errors['email'] = 'Пользователь с таким email уже зарегистрирован';
@@ -60,9 +62,9 @@
             $res = mysqli_stmt_execute($stmt);
         }
 
-        if($res) {
+        if($res && empty($errors)) {
             // ошибки нет, показываем главную страницу
-            header("Location: index.php");
+            header("Location: authorization.php");
           } else {
             // ошибка есть
             echo '<br>Ошибка сохранения данных';

@@ -3,7 +3,21 @@ $isAuthorized = isset($_SESSION['currentUser']) ? TRUE : FALSE;
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-
+// определим переменный для коннекта к БД
+// путь всегда один
+$bd_path = 'localhost';
+// имя пользователя для сайта
+$bd_user = 'u0857553_root';
+// имя пользователя для локалки
+// $bd_user = 'root';
+// пароль для сайта
+$bd_pass = 'U0l7D5q1';
+// пароль для локалки
+// $bd_pass = '';
+// имя базы для сайта
+$bd_name = 'u0857553_mydealsdb';
+// имя базы для локалки
+// $bd_name = 'mydealsDB';
 
 
 // запрос данных пользователя (старый)
@@ -30,9 +44,10 @@ $taskList = [];
 if ($isAuthorized) {
   $currentUser = $_SESSION['currentUser'];
 
-  $con = mysqli_connect('localhost', 'root', '','mydealsDB');
+  $con = mysqli_connect($bd_path, $bd_user, $bd_pass, $bd_name);
 
   // Для сайта инфа ниже
+  // $con = mysqli_connect('localhost', 'root', '','mydealsDB');
   // $con = mysqli_connect('localhost', 'u0857553_root', 'U0l7D5q1','u0857553_mydealsdb'); 
 
   if(!$con) {

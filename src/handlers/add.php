@@ -82,7 +82,7 @@ $dataToTemplate = $thisPage['vars'];
     // формируем массив с данными для передачи в БД
     $dataArray = [$formProjectId, $currentUser['id'], $formNameValue, $formDeadlineValue, $file_url];
     // коннектимся к БД
-    $con = mysqli_connect('localhost', 'root', '','mydealsDB');
+    $con = mysqli_connect($bd_path, $bd_user, $bd_pass,$bd_name);
     // Строка запроса
     $sql = "INSERT INTO `task` (project_id, user_id, name, creation_date, deadline, status, file) VALUES (?, ?, ?, NOW(), ?, 0, ?)";
     // используем функцию для подготовки запроса

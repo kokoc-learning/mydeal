@@ -43,12 +43,12 @@ foreach ($required_fields as $field) {
 }
 
 if (empty($errors)){
-  $con = mysqli_connect('localhost', 'root', '','mydealsDB');
+  // $con = mysqli_connect($bd_path, $bd_user, $bd_pass, $bd_name);
+  $con = mysqli_connect('localhost', 'u0857553_root', 'U0l7D5q1','u0857553_mydealsdb');
 
   if(!$con) {
       die("Connection failed: " . mysqli_connect_error());
   }
-
 
   $email = mysqli_real_escape_string($con, $_POST['email']);
 

@@ -1,3 +1,7 @@
+<?php
+$searchValue = $_GET['search'] ?? '';
+?>
+
 <div class="content">
     <section class="content__side">
         <h2 class="content__side-heading">Проекты</h2>
@@ -33,8 +37,8 @@
     <main class="content__main">
         <h2 class="content__main-heading">Список задач</h2>
 
-        <form class="search-form" action="index.php" method="post" autocomplete="off">
-            <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
+        <form class="search-form" action="index.php" method="get" autocomplete="off">
+            <input class="search-form__input" type="text" name="search" value="<?=$searchValue?>" placeholder="Поиск по задачам">
 
             <input class="search-form__submit" type="submit" name="" value="Искать">
         </form>
@@ -76,6 +80,8 @@
                 // проверка корректности id проекта, указанного в параметре запроса
                 if ( $projectIdIsset && !projectIdCheck($activeProjectId, $projectList)){
                     echo '404. Page not found';
+                } elseif (empty($taskList) && $searchValue){
+                    echo 'По вашему запросу ничего не найдено';
                 } else {
                     foreach ($taskList as $task) {
                         // далее идет код для фильтра дел по категориям

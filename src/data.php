@@ -7,17 +7,17 @@ $show_complete_tasks = rand(0, 1);
 // путь всегда один
 $bd_path = 'localhost';
 // имя пользователя для сайта
-$bd_user = 'u0857553_root';
+// $bd_user = 'u0857553_root';
 // имя пользователя для локалки
-// $bd_user = 'root';
+$bd_user = 'root';
 // пароль для сайта
-$bd_pass = 'U0l7D5q1';
+// $bd_pass = 'U0l7D5q1';
 // пароль для локалки
-// $bd_pass = '';
+$bd_pass = '';
 // имя базы для сайта
-$bd_name = 'u0857553_mydealsdb';
+// $bd_name = 'u0857553_mydealsdb';
 // имя базы для локалки
-// $bd_name = 'mydealsDB';
+$bd_name = 'mydealsDB';
 
 
 // запрос данных пользователя (старый)
@@ -33,7 +33,7 @@ $currentUser = array(
   'id' => '',
   'name' => 'Гость',
   'email' => '',
-  'password' => '',
+  'password' => '',й
   'reg_date' => ''
 );
 

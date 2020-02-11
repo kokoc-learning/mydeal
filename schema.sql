@@ -31,5 +31,6 @@ CREATE table task(
     status INT NOT NULL DEFAULT 0,
     file TEXT,
     FOREIGN KEY(user_id) REFERENCES user(id),
-    FOREIGN KEY(project_id) REFERENCES project(id)
+    FOREIGN KEY(project_id) REFERENCES project(id),
+    FULLTEXT KEY (name)
 );

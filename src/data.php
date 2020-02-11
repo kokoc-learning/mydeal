@@ -4,7 +4,7 @@ $isAuthorized = isset($_SESSION['currentUser']) ? TRUE : FALSE;
 $show_complete_tasks = rand(0, 1);
 
 // определим переменный для коннекта к БД
-// путь всегда один
+// путь всегда один -----------------------
 $bd_path = 'localhost';
 // имя пользователя для сайта
 // $bd_user = 'u0857553_root';
@@ -41,6 +41,7 @@ $projectList = [];
 $taskList = [];
 
 
+
 if ($isAuthorized) {
   $currentUser = $_SESSION['currentUser'];
 
@@ -56,16 +57,25 @@ if ($isAuthorized) {
 
   mysqli_set_charset($con, 'utf8');
   // запрос списка проектов
+  
   $sqlRes = mysqli_query($con, 'SELECT `id`, `name` FROM `project` WHERE `user_id` = '.$currentUser['id'].' ORDER BY `name` ');
   $projectList = mysqli_fetch_all($sqlRes, MYSQLI_ASSOC);
   
   // запрос списка задач
-  $sqlRes = mysqli_query($con, 
-  "SELECT project.id AS categoryId, task.name, task.deadline, project.name AS category, task.status AS isComplete, task.file AS `file`
-      FROM `task` 
-      JOIN `project` ON task.project_id = project.id 
-      WHERE task.user_id = '".$currentUser['id']."' 
-      ORDER BY task.name");
+  $sqlSearchAdd = '';
+  $searchKey = '';
+  if ($_GET['search']){
+    $searchKey = $_GET['search'];
+    $sqlSearchAdd = " AND MATCH (task.name) AGAINST ('".$searchKey."')";
+  } 
+
+  $sqlQuery = "SELECT project.id AS categoryId, task.name, task.deadline, project.name AS category, task.status AS isComplete, task.file AS `file`
+    FROM `task` 
+    JOIN `project` ON task.project_id = project.id 
+    WHERE task.user_id = '".$currentUser['id']."'".$sqlSearchAdd." 
+    ORDER BY task.name";
+
+  $sqlRes = mysqli_query($con, $sqlQuery);
   
   $taskList = mysqli_fetch_all($sqlRes, MYSQLI_ASSOC);
   

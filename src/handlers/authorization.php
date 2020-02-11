@@ -45,16 +45,16 @@ foreach ($required_fields as $field) {
 if (empty($errors)){
   // $con = mysqli_connect($bd_path, $bd_user, $bd_pass, $bd_name);
   $con = mysqli_connect('localhost', 'u0857553_root', 'U0l7D5q1','u0857553_mydealsdb');
-
+  mysqli_set_charset($con, 'utf8');
   if(!$con) {
       die("Connection failed: " . mysqli_connect_error());
   }
 
   $email = mysqli_real_escape_string($con, $_POST['email']);
 
-  $sql = "SELECT `id`, `name`, `email`, `password`, `registration_date` AS reg_date 
+  $sqlQuery = "SELECT `id`, `name`, `email`, `password`, `registration_date` AS reg_date 
           FROM user WHERE email = '$email'";
-  $res = mysqli_query($con, $sql);
+  $res = mysqli_query($con, $sqlQuery);
   
   // если в ответе что-то есть, то
   if(mysqli_num_rows($res) > 0){

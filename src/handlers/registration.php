@@ -39,7 +39,7 @@
     // 2. запись в БД
     if (empty($errors)){
         $con = mysqli_connect($bd_path, $bd_user, $bd_pass, $bd_name);
-
+        mysqli_set_charset($con, 'utf8');
         if(!$con) {
             die("Connection failed: " . mysqli_connect_error());
         }

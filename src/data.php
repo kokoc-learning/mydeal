@@ -3,37 +3,36 @@ $isAuthorized = isset($_SESSION['currentUser']) ? TRUE : FALSE;
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-// определим переменный для коннекта к БД
-// путь всегда один -----------------------
-$bd_path = 'localhost';
-// имя пользователя для сайта
-// $bd_user = 'u0857553_root';
-// имя пользователя для локалки
-$bd_user = 'root';
-// пароль для сайта
-// $bd_pass = 'U0l7D5q1';
-// пароль для локалки
-$bd_pass = '';
-// имя базы для сайта
-// $bd_name = 'u0857553_mydealsdb';
-// имя базы для локалки
-$bd_name = 'mydealsDB';
+// фильтр задач
+if(isset($_GET['taskFilter']) && $_GET['taskFilter'] > 0 && $_GET['taskFilter'] < 5) {
+  $taskFilter = $_GET['taskFilter'];
+  // header("Location: index.php");
+} else {
+  $taskFilter = 1;
+}
 
+// для локального
+$bdConnectData = array(
+  'bd_path' => 'localhost',
+  'bd_user' => 'root',
+  'bd_pass' => '',
+  'bd_name' => 'mydealsDB'
+);
 
-// запрос данных пользователя (старый)
-// $sqlRes = mysqli_query($con, "SELECT `id`, `name`, `email` FROM `user` WHERE email = '".$userEmail."' ");
-// $userData = mysqli_fetch_all($sqlRes, MYSQLI_ASSOC);
-// $userName = $userData[0]['name'];
-// $userId = $userData[0]['id'];
-// $currentUser['id'] = $userData[0]['id'];
-// $currentUser['name'] = $userData[0]['name'];
+// для сайта
+// $bdConnectData = array(
+//   'bd_path' => 'localhost',
+//   'bd_user' => 'u0857553_root',
+//   'bd_pass' => 'U0l7D5q1',
+//   'bd_name' => 'u0857553_mydealsdb'
+// );
 
 // если не авторизован пользователь, то...
 $currentUser = array(
   'id' => '',
   'name' => 'Гость',
   'email' => '',
-  'password' => '',й
+  'password' => '',
   'reg_date' => ''
 );
 
@@ -45,7 +44,7 @@ $taskList = [];
 if ($isAuthorized) {
   $currentUser = $_SESSION['currentUser'];
 
-  $con = mysqli_connect($bd_path, $bd_user, $bd_pass, $bd_name);
+  $con = mysqli_connect($bdConnectData['bd_path'], $bdConnectData['bd_user'], $bdConnectData['bd_pass'], $bdConnectData['bd_name']);
 
   // Для сайта инфа ниже
   // $con = mysqli_connect('localhost', 'root', '','mydealsDB');
@@ -64,16 +63,16 @@ if ($isAuthorized) {
   // запрос списка задач
   $sqlSearchAdd = '';
   $searchKey = '';
-  if ($_GET['search']){
+  if(isset($_GET['search'])){
     $searchKey = $_GET['search'];
     $sqlSearchAdd = " AND MATCH (task.name) AGAINST ('".$searchKey."')";
   } 
 
-  $sqlQuery = "SELECT project.id AS categoryId, task.name, task.deadline, project.name AS category, task.status AS isComplete, task.file AS `file`
+  $sqlQuery = "SELECT project.id AS categoryId, task.id AS taskId, task.name, task.deadline, project.name AS category, task.status AS isComplete, task.file AS `file`
     FROM `task` 
     JOIN `project` ON task.project_id = project.id 
     WHERE task.user_id = '".$currentUser['id']."'".$sqlSearchAdd." 
-    ORDER BY task.name";
+    ORDER BY task.status ASC, task.name ASC";
 
   $sqlRes = mysqli_query($con, $sqlQuery);
   
@@ -92,7 +91,9 @@ $pages = array(
       'show_complete_tasks' => $show_complete_tasks, 
       'projectList' => $projectList, 
       'taskList' => $taskList,
-      'currentUser' => $currentUser
+      'currentUser' => $currentUser,
+      'bdConnectData' => $bdConnectData,
+      'taskFilter' => $taskFilter
     )
   ),
   'add' => array(
@@ -103,6 +104,7 @@ $pages = array(
       'show_complete_tasks' => $show_complete_tasks, 
       'projectList' => $projectList, 
       'taskList' => $taskList,
+      'bdConnectData' => $bdConnectData,
       'currentUser' => $currentUser
     )
   ),
@@ -110,6 +112,7 @@ $pages = array(
     'url_key' => '/registration.php',
     'tpl' => 'registration.php',
     'vars' => array(
+      'bdConnectData' => $bdConnectData,
       'pageTitle' => 'Регистрация',
       
     )
@@ -118,6 +121,7 @@ $pages = array(
     'url_key' => '/authorization.php',
     'tpl' => 'authorization.php',
     'vars' => array(
+      'bdConnectData' => $bdConnectData,
       'pageTitle' => 'Авторизация',
       
     )
@@ -126,6 +130,7 @@ $pages = array(
     'url_key' => '/guest.php',
     'tpl' => 'guest.php',
     'vars' => array(
+      'bdConnectData' => $bdConnectData,
       'pageTitle' => 'Гость',
       
     )
@@ -134,8 +139,20 @@ $pages = array(
     'url_key' => '/logout.php',
     'tpl' => 'logout.php',
     'vars' => array(
+      'bdConnectData' => $bdConnectData,
       'pageTitle' => 'Logout',
       
+    )
+  ),
+  'addproject' => array(
+    'url_key' => '/addproject.php',
+    'tpl' => 'addproject.php',
+    'vars' => array(
+      'pageTitle' => 'addproject',
+      'projectList' => $projectList, 
+      'taskList' => $taskList,
+      'bdConnectData' => $bdConnectData,
+      'currentUser' => $currentUser
     )
   )
 ); 

@@ -115,4 +115,50 @@ function deadlineFieldValidation($date){
 function emailValidation($email){
 
 }
+
+
+function deadlineFilter($taskDeadlineDate, $filterTab){
+   
+    $result = false;
+    $filterTab = ($filterTab) ? intval($filterTab) : 1;
+    $today = time();
+    $deadline = strtotime($taskDeadlineDate);
+    
+    
+    switch($filterTab) {
+        case 1:
+            $result = TRUE;
+            break;
+        case 2: 
+            if(($deadline - $today) < 86400 && ($deadline - $today) > 0){
+                $result = TRUE;
+            }
+            break;
+        case 3:
+            if(($deadline - $today) < (86400 * 2) && ($deadline - $today) > 86400){
+                $result = TRUE;
+            }
+            break;
+        case 4:
+            if(($deadline - $today) < 0 && ($taskDeadlineDate)){
+                $result = TRUE;
+            }
+            break;
+    }
+
+    return $result;
+}
+
+
+function taskCompleter($taskId, $bdConnectData){
+    $con = mysqli_connect($bdConnectData['bd_path'], $bdConnectData['bd_user'], $bdConnectData['bd_pass'], $bdConnectData['bd_name']);
+    mysqli_set_charset($con, 'utf8');
+    $query = 'UPDATE `task` SET `status` = 1 WHERE `id` ='.$taskId;
+    $sqlRes = mysqli_query($con, $query);
+    // $reas = mysqli_fetch($sqlRes);
+    mysqli_close($con);
+}
+
+
+
 ?>

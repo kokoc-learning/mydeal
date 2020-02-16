@@ -35,7 +35,7 @@ $errorProjectClass = isset($formErrors['project']) ? 'form__input--error' : '';
         </nav>
 
         <a class="button button--transparent button--plus content__side-button"
-        href="pages/form-project.html" target="project_add">Добавить проект</a>
+        href="addproject" target="project_add">Добавить проект</a>
     </section>
 
     <main class="content__main">

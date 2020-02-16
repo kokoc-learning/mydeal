@@ -15,8 +15,8 @@ $container_with_sidebar_class = $isAuthorized ? 'container--with-sidebar' : '';
     <meta charset="UTF-8">
     <title><?=$pageName?></title>
     <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="<?= $body_bg_image_class?>">

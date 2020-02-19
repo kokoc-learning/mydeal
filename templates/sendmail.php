@@ -41,10 +41,10 @@ try {
 $mailer = new Swift_Mailer($transport);
 
 // Create a message
-$message = (new Swift_Message('Wonderful Subject'))
+$message = (new Swift_Message('Пора делать дела!'))
   ->setFrom(['mydeals2020@yandex.ru' => 'MyDeals'])
   ->setTo(['creator051@yandex.ru' => 'A name'])
-  ->setBody('Привет, это конструктор')
+  ->setBody('Привет')
   ;
 
 // Send the message

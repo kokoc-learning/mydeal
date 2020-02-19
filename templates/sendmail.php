@@ -34,7 +34,7 @@ try {
 
     $transport = (new Swift_SmtpTransport('smtp.yandex.ru', 465, 'ssl'))
         ->setUsername('creator051@yandex.ru')
-        ->setPassword('Extended051J')
+        ->setPassword('*******')
         ;
 
 // Create the Mailer using your created Transport

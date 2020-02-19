@@ -33,8 +33,8 @@ try {
 
 
     $transport = (new Swift_SmtpTransport('smtp.yandex.ru', 465, 'ssl'))
-        ->setUsername('creator051@yandex.ru')
-        ->setPassword('*******')
+        ->setUsername('mydeals2020@yandex.ru')
+        ->setPassword('xc_1J-25Anb')
         ;
 
 // Create the Mailer using your created Transport
@@ -42,9 +42,9 @@ $mailer = new Swift_Mailer($transport);
 
 // Create a message
 $message = (new Swift_Message('Wonderful Subject'))
-  ->setFrom(['creator051@yandex.ru' => 'MyDeals'])
+  ->setFrom(['mydeals2020@yandex.ru' => 'MyDeals'])
   ->setTo(['creator051@yandex.ru' => 'A name'])
-  ->setBody('Here is the message itself')
+  ->setBody('Привет, это конструктор')
   ;
 
 // Send the message

@@ -33,7 +33,7 @@ function include_template($name, $data){
 
 function deadLineLeftHours($deadLine) {
     if ($deadLine === null) {
-        return 0;
+        return 'noDeadline';
     }
     $deadLineDate = strtotime($deadLine);
     $nowDate = time();

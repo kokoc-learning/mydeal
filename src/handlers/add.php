@@ -82,7 +82,6 @@ $dataToTemplate = $thisPage['vars'];
     // формируем массив с данными для передачи в БД
     $dataArray = [$formProjectId, $currentUser['id'], $formNameValue, $formDeadlineValue, $file_url];
     // коннектимся к БД
-    // $con = mysqli_connect($bd_path, $bd_user, $bd_pass,$bd_name);
     $con = mysqli_connect($bdConnectData['bd_path'], $bdConnectData['bd_user'], $bdConnectData['bd_pass'], $bdConnectData['bd_name']);
     mysqli_set_charset($con, 'utf8');
     // Строка запроса

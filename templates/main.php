@@ -115,7 +115,7 @@ if($taskFilter != 1){
                                 echo ' task--completed';
                             }
 
-                            if ($deadLineIsComing <= 24 && $deadLineIsComing > 0) {
+                            if ($deadLineIsComing <= 24 && $deadLineIsComing >= 0 && !$task['isComplete'] && $deadLineIsComing !== 'noDeadline') {
                                 echo ' task--important';
                             }
 

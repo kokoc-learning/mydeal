@@ -5,16 +5,9 @@ $dataToTemplate = $thisPage['vars'];
 $passwordHash = password_hash('пароль при регистрации', PASSWORD_DEFAULT);
 // или берем из базы
 
-if(password_verify('Пароль из формы', $passwordHash)){
-  // верный
-
-} else {
-  // не верный
-
-}
-
-
+// массив с полями для проверки
 $required_fields = ['email', 'password'];
+// создаем пустой массив для ошибок
 $errors = [];
 
 foreach ($required_fields as $field) {
@@ -43,8 +36,8 @@ foreach ($required_fields as $field) {
 }
 
 if (empty($errors)){
-  // $con = mysqli_connect($bd_path, $bd_user, $bd_pass, $bd_name);
-  $con = mysqli_connect('localhost', 'u0857553_root', 'U0l7D5q1','u0857553_mydealsdb');
+
+  $con = mysqli_connect($bdConnectData['bd_path'], $bdConnectData['bd_user'], $bdConnectData['bd_pass'], $bdConnectData['bd_name']);
   mysqli_set_charset($con, 'utf8');
   if(!$con) {
       die("Connection failed: " . mysqli_connect_error());

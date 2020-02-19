@@ -8,7 +8,6 @@ define('PATH_TPL', ROOT_PATH . '/templates/');
 
 include_once(PATH_SRC . 'data.php');
 include_once(PATH_SRC . 'functions.php');
-include_once(PATH_SRC . 'vendor/autoload_real.php');
 include_once(PATH_SRC . 'controller.php');
 ?>
 

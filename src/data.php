@@ -1,5 +1,8 @@
 <?php
+// авторизован ли пользователь
 $isAuthorized = isset($_SESSION['currentUser']) ? TRUE : FALSE;
+
+
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
@@ -45,10 +48,6 @@ if ($isAuthorized) {
   $currentUser = $_SESSION['currentUser'];
 
   $con = mysqli_connect($bdConnectData['bd_path'], $bdConnectData['bd_user'], $bdConnectData['bd_pass'], $bdConnectData['bd_name']);
-
-  // Для сайта инфа ниже
-  // $con = mysqli_connect('localhost', 'root', '','mydealsDB');
-  // $con = mysqli_connect('localhost', 'u0857553_root', 'U0l7D5q1','u0857553_mydealsdb'); 
 
   if(!$con) {
       echo 'Ошибка подключения к MySQL '. mysqli_connect_error();
@@ -149,6 +148,17 @@ $pages = array(
     'tpl' => 'addproject.php',
     'vars' => array(
       'pageTitle' => 'addproject',
+      'projectList' => $projectList, 
+      'taskList' => $taskList,
+      'bdConnectData' => $bdConnectData,
+      'currentUser' => $currentUser
+    )
+  ),
+  'sendmail' => array(
+    'url_key' => '/sendmail.php',
+    'tpl' => 'sendmail.php',
+    'vars' => array(
+      'pageTitle' => 'sendmail',
       'projectList' => $projectList, 
       'taskList' => $taskList,
       'bdConnectData' => $bdConnectData,

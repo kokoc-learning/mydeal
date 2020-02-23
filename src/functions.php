@@ -159,6 +159,30 @@ function taskCompleter($taskId, $bdConnectData){
     mysqli_close($con);
 }
 
+function mailDataConverter($dataArr){
+    $result = Array();
+    foreach ($dataArr as $taskArr) {
+        $taskName = $taskArr['taskName'];
+        $userName = $taskArr['username'];
+        $deadline = $taskArr['deadline'];
+        $email = $taskArr['email'];
+        $result[$email]['username'] = $userName;
+        $result[$email]['message'] = (isset($result[$email]['message'])) ?  $result[$email]['message'].", задача \"$taskName\" должна быть сделана $deadline" : "задача  \"$taskName\" должна быть сделана $deadline";
+    }
+    return $result;
+    // макетик массива $result, чтоб не забыть
+    // $result = array(
+    //     "email1" => array(
+    //         'username' => 'name1',
+    //         'message' => 'тут сообщение о задачах1',
+    //     ),
+    //     "email2" => array(
+    //         'username' => 'name2',
+    //         'message' => 'тут сообщение о задачах2',
+    //     ),
+    
+    // )
+}
 
 
 ?>

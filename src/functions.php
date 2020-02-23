@@ -36,7 +36,7 @@ function deadLineLeftHours($deadLine) {
         return 'noDeadline';
     }
     $deadLineDate = strtotime($deadLine);
-    $nowDate = time();
+    $nowDate = strtotime('today');
     $diffTime = $deadLineDate - $nowDate;
     $secsInHour = 3600;
 
@@ -130,17 +130,17 @@ function deadlineFilter($taskDeadlineDate, $filterTab){
             $result = TRUE;
             break;
         case 2: 
-            if(($deadline - $today) < 86400 && ($deadline - $today) > 0){
+            if(strtotime('today') == $deadline){
                 $result = TRUE;
-            }
+            } 
             break;
         case 3:
-            if(($deadline - $today) < (86400 * 2) && ($deadline - $today) > 86400){
+            if(strtotime('tomorrow') == $deadline){
                 $result = TRUE;
             }
             break;
         case 4:
-            if(($deadline - $today) < 0 && ($taskDeadlineDate)){
+            if(strtotime('today') > $deadline){
                 $result = TRUE;
             }
             break;

@@ -103,7 +103,6 @@ if($taskFilter != 1){
                             continue;
                         }
 
-
                         $deadLineIsComing = deadLineLeftHours($task['deadline']);
                         if ($show_complete_tasks === 0 && intval($task['isComplete']) === 1) {
                             continue;

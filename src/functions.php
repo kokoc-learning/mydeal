@@ -140,7 +140,7 @@ function deadlineFilter($taskDeadlineDate, $filterTab){
             }
             break;
         case 4:
-            if(strtotime('today') > $deadline){
+            if(strtotime('today') > $deadline && $deadline != NULL){
                 $result = TRUE;
             }
             break;

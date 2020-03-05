@@ -1,6 +1,9 @@
 <?php
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -48,6 +51,7 @@ $show_complete_tasks = rand(0, 1);
                         </li>
                     </ul>
                 </nav>
+         
 
                 <a class="button button--transparent button--plus content__side-button"
                    href="pages/form-project.html" target="project_add">Добавить проект</a>
@@ -79,12 +83,7 @@ $show_complete_tasks = rand(0, 1);
 
                 <table class="tasks">
                     <tr class="tasks__item task">
-                        <td class="task__select">
-                            <label class="checkbox task__checkbox">
-                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                                <span class="checkbox__text">Сделать главную страницу Дела в порядке</span>
-                            </label>
-                        </td>
+                  
 
                         <td class="task__file">
                             <a class="download-link" href="#">Home.psd</a>
@@ -93,6 +92,7 @@ $show_complete_tasks = rand(0, 1);
                         <td class="task__date"></td>
                     </tr>
                     <?php 
+                        
                         $content='<tr class="tasks__item task task--completed">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">

@@ -169,9 +169,7 @@ $information_task=array(
                     }
                     ?>
 
-                        <td class="task__file">
-                            <a class="download-link" href="#">Home.psd</a>
-                        </td>
+                      
 
                         <td class="task__date"></td>
                     </tr>
@@ -190,6 +188,9 @@ $information_task=array(
                     ';
                     if($show_complete_tasks) echo $content;
                     ?>
+                     <td class="task__file">
+                            <a class="download-link" href="#">Home.psd</a>
+                        </td>
                     <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
                 </table>
             </main>

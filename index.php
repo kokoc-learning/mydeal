@@ -49,9 +49,21 @@ $information_task=array(
         'category'=>'Домашние дела',
         'completed'=>false
 
-    ),
+    )
     
-)
+);
+
+function taskcounting($information_task,$projects){
+    $count=0;
+    foreach($information_task as $value){
+        if ($value['category'] == $projects){
+            $count++;
+        } 
+    }
+
+    return $count;
+}
+
 
 
 ?>
@@ -99,7 +111,7 @@ $information_task=array(
                             foreach($projects as $key=> $value ){
                                 $name_of_project='<li class="main-navigation__list-item">
                                 <a class="main-navigation__list-item-link" href="#">'.$value.'</a>
-                                <span class="main-navigation__list-item-count">0</span>
+                                <span class="main-navigation__list-item-count">'.taskcounting($information_task,$value).'</span>
                             </li>';
 
                             echo $name_of_project;

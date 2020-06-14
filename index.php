@@ -42,6 +42,18 @@ $tasks = array(
     ),
 );
 
+//считаем количество задач в категории
+function countProjects($tasks = array(),$projects_categories){
+    $i=0;
+    foreach ($tasks as $key => $value) {
+        if($value['category'] == $projects_categories){
+           $i++; 
+        }
+    }
+    return $i;
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -88,7 +100,7 @@ $tasks = array(
                                 echo '
                                 <li class="main-navigation__list-item">
                                     <a class="main-navigation__list-item-link" href="#">'.$value.'</a>
-                                    <span class="main-navigation__list-item-count">0</span>
+                                    <span class="main-navigation__list-item-count">'.countProjects($tasks, $value).'</span>
                                 </li>
                                 ';    
                             }

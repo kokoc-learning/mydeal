@@ -52,18 +52,35 @@
     <table class="tasks">
         <?php
         foreach ($tasks as $key => $value) {
+            //расчет времени до цели
+            if($value['date_complete']){
+                $now_date = time();
+                $target_date = strtotime($value['date_complete']);
+                $date_range = $target_date - $now_date;
+                if($date_range > 0){
+                    $res_hour = floor($date_range / 60 / 60);
+                    if($res_hour <= 24){
+                        $task_important = 'task--important';
+                    } else {
+                        $task_important = '';
+                    } 
+                }        
+            }
+            
+            //присвоение классов
             if($value['complete']){
                 $mark_complete = 'task--completed';
                 $checked = 'checked';
             }
 
+            //шаблон вывода задачи
             if($value['complete'] && $show_complete_tasks == 0){
                 $mark_complete = '';
                 $checked = 'value="1"';
                 continue;
             } else {
                 echo '
-                <tr class="tasks__item task '.$mark_complete.'">
+                <tr class="tasks__item task '.$mark_complete.' '.$task_important.'">
                     <td class="task__select">
                         <label class="checkbox task__checkbox">
                             <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" '.$checked.' >
@@ -80,6 +97,7 @@
                 ';
                 $mark_complete = '';
                 $checked = 'value="1"';
+                $task_important = '';
             }   
         }
         ?>

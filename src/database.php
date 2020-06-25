@@ -58,22 +58,22 @@
 	//задачи
 	$tasks = array(
 		'Собеседование в IT компании' => array(
-			'date_complete'=>'01.12.2019',
+			'date_complete'=>'28.06.2020',
 			'category'=>'Работа',
 			'complete'=>false,
 		),
 		'Выполнить тестовое задание' => array(
-			'date_complete'=>'25.12.2019',
+			'date_complete'=>'26.06.2020',
 			'category'=>'Работа',
 			'complete'=>false,
 		),
 		'Сделать задание первого раздела' => array(
-			'date_complete'=>'21.12.2019',
+			'date_complete'=>'24.06.2020',
 			'category'=>'Учеба',
 			'complete'=>true,
 		),
 		'Встреча с другом' => array(
-			'date_complete'=>'22.12.2019',
+			'date_complete'=>'22.06.2020',
 			'category'=>'Входящие',
 			'complete'=>false,
 		),

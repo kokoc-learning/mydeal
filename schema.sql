@@ -1,0 +1,35 @@
+CREATE DATABASE mydeal
+DEFAULT CHARACTER SET UTF8
+DEFAULT COLLATE UTF8_GENERAL_CI;
+USE mydeal;
+
+CREATE TABLE users(
+id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+date_registration TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+email varchar(100) UNIQUE NOT NULL,
+password varchar(32) NOT NULL 
+);
+
+CREATE TABLE projects(
+id INT AUTO_INCREMENT PRIMARY KEY,
+title VARCHAR(100) UNIQUE NOT NULL,
+author INT,
+FOREIGN KEY (author) REFERENCES users(id)
+);
+
+CREATE TABLE tasks(
+id INT AUTO_INCREMENT PRIMARY KEY,
+title VARCHAR(200) NOT NULL,
+task_status BOOL DEFAULT 0,
+date_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+date_ready TIMESTAMP NOT NULL,
+attachment VARCHAR(300),
+author INT, 
+project INT,
+FOREIGN KEY (author) REFERENCES users(id),
+FOREIGN KEY (project) REFERENCES projects(id) 
+);
+
+CREATE INDEX t_title ON tasks(title);
+CREATE INDEX t_attachment ON tasks(attachment);

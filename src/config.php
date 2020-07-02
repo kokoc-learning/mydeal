@@ -13,5 +13,4 @@
 	foreach ($baseFiles as $value) {
 		include_once($value); //подключаем файлы
 	}
-
 ?>

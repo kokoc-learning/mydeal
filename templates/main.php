@@ -1,47 +1,22 @@
-<?php
-    // показывать или нет выполненные задачи
-	$show_complete_tasks = rand(0, 1);
-	$mark_complete = ''; //метка решенной задачи
-    $checked = 'value="1"'; //атрибут для инпута выполненного задания
-    
-    //подключаемся к базе данных
-	$link = mysqli_connect('localhost', 'root', '', 'mydeal');
-	mysqli_set_charset($link, "utf8");
-	
-	if ($link == false){
-		print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
-	}
-	else {
-        $arr_projects = [];//массив проектов
-        $arr_tasks = [];//массив задач
-
-        $sql_project = 'select * from projects where author=1';
-        $res_project = mysqli_query($link, $sql_project);
-        while ($row = mysqli_fetch_array($res_project)) {
-            $arr_projects[$row['id']] = $row['title'];
-        }
-
-        $sql_task = 'select * from tasks where author=1';
-        $res_task = mysqli_query($link, $sql_task);
-        while ($row = mysqli_fetch_array($res_task)) {
-            $arr_tasks[$row['id']] = array('title' => $row['title'],'status' => $row['task_status'],'date_start' => $row['date_create'],'date_complete' => $row['date_ready']);
-        }
-    }
-    mysqli_close($link);
-?>
 <section class="content__side">
     <h2 class="content__side-heading">Проекты</h2>
 
     <nav class="main-navigation">
-    <ul class="main-navigation__list">
+        <ul class="main-navigation__list">
             <?php
-                foreach ($arr_projects as $value) {
+                foreach ($arr_projects as $key => $value) {
+                    //проверяем гет параметр
+                    if($project_show==$key){
+                        $active_project = 'main-navigation__list-item--active';
+                    }
+
                     echo '
-                    <li class="main-navigation__list-item">
-                        <a class="main-navigation__list-item-link" href="#">'.$value.'</a>
+                    <li class="main-navigation__list-item '.$active_project.'">
+                        <a class="main-navigation__list-item-link" href="?show='.$key.'">'.$value.'</a>
                         <span class="main-navigation__list-item-count">'.countProjects($tasks, $value).'</span>
                     </li>
-                    ';    
+                    ';
+                    $active_project = '';    
                 }
             ?>
         </ul>

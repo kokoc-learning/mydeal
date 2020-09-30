@@ -1,12 +1,24 @@
 <?php
+	//подключаемся к базе данных
+	$link = mysqli_connect($host, $user, $pass, $dbname);
+	mysqli_set_charset($link, "utf8");
+
 	//база данных
 	$database = array(
 		'pages' => array( 					                                           
 			array(
-				'url_key' => '/', 										
+				'url_key' => '/index.php', 										
 				'title' => 'Главная страница - mydeal', 											
 				'tpl' => 'layout.php', 
 				'content' => 'main.php',     											
+				'h1' => '',                  					
+				'text' => ''                 
+			),
+			array(
+				'url_key' => '/error.php', 										
+				'title' => 'Ошибка - mydeal', 											
+				'tpl' => 'layout.php', 
+				'content' => 'error.php',     											
 				'h1' => '',                  					
 				'text' => ''                 
 			),																		

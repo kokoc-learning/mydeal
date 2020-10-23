@@ -1,4 +1,13 @@
 <?php
+function task_count($task_list, $project) {
+    $count = 0;
+    foreach($task_list as $value) {
+        if ($value['type'] == $project)
+            $count++;
+    }
+    return $count;
+}
+
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
@@ -91,7 +100,7 @@ $tasks = array(
                             echo'
                             <li class="main-navigation__list-item">
                                 <a class="main-navigation__list-item-link" href="#">'. $temp[$i] .'</a>
-                                <span class="main-navigation__list-item-count">0</span>
+                                <span class="main-navigation__list-item-count">'. task_count($tasks, $temp[$i]) .'</span>
                             </li>';
                         }
                     ?>

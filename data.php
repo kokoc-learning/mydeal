@@ -2,25 +2,25 @@
 $tasks = array(
     array(
         'name' => 'Собеседование в  IT компании',
-        'deadline' => '01.02.2019',
+        'deadline' => '24.10.2020',
         'type' => 'Работа',
         'complete' => false,
     ),
     array(
         'name' => 'Выполнить тестовое задание',
-        'deadline' => '25.12.2019',
+        'deadline' => '25.10.2020',
         'type' => 'Работа',
         'complete' => false,
     ),
     array(
         'name' => 'Сделать задание первого раздела',
-        'deadline' => '21.12.2019',
+        'deadline' => '21.12.2020',
         'type' => 'Учеба',
         'complete' => true,
     ),
     array(
         'name' => 'Встреча с другом',
-        'deadline' => '22.12.2019',
+        'deadline' => '22.12.2020',
         'type' => 'Входящие',
         'complete' => false,
     ),

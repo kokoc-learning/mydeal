@@ -8,6 +8,16 @@ function task_count($task_list, $project) {
     return $count;
 }
 
+function check_time($date) {
+    $today = strtotime("now");
+    $dead_line = strtotime($date);
+    $time_to_deadline = ($dead_line -  $today) / 3600;
+    if ($time_to_deadline < 24){
+        return true;
+    }
+    return false;
+}
+
 $show_complete_tasks = rand(0, 1);
 include('data.php');
 ?>
@@ -92,6 +102,18 @@ include('data.php');
                                 <td class="task__select">
                                     <label class="checkbox task__checkbox">
                                         <input class="checkbox__input visually-hidden" type="checkbox" checked>
+                                        <span class="checkbox__text">'. $value['name'] .'</span>
+                                    </label>
+                                </td>
+                                <td class="task__date">'. $value['deadline'] .'</td>
+                                <td class="task__controls"></td>
+                                </tr>';
+                            }
+                            elseif (check_time($value['deadline']) && !empty($value['deadline'])) {
+                                echo'<tr class="tasks__item task task--important">
+                                <td class="task__select">
+                                    <label class="checkbox task__checkbox">
+                                        <input class="checkbox__input visually-hidden" type="checkbox">
                                         <span class="checkbox__text">'. $value['name'] .'</span>
                                     </label>
                                 </td>

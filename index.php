@@ -1,6 +1,45 @@
 <?php
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
+
+$tasks = array(
+    array(
+        'name' => 'Собеседование в  IT компании',
+        'deadline' => '01.02.2019',
+        'type' => 'Работа',
+        'complete' => false,
+    ),
+    array(
+        'name' => 'Выполнить тестовое задание',
+        'deadline' => '25.12.2019',
+        'type' => 'Работа',
+        'complete' => false,
+    ),
+    array(
+        'name' => 'Сделать задание первого раздела',
+        'deadline' => '21.12.2019',
+        'type' => 'Учеба',
+        'complete' => true,
+    ),
+    array(
+        'name' => 'Встреча с другом',
+        'deadline' => '22.12.2019',
+        'type' => 'Входящие',
+        'complete' => false,
+    ),
+    array(
+        'name' => 'Купить корм для кота',
+        'deadline' => '',
+        'type' => 'Домашние дела',
+        'complete' => false,
+    ),
+    array(
+        'name' => 'Заказать пиццу',
+        'deadline' => '',
+        'type' => 'Домашние дела',
+        'complete' => false,
+    ),
+    );
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -42,10 +81,20 @@ $show_complete_tasks = rand(0, 1);
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                        <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#">Название проекта</a>
-                            <span class="main-navigation__list-item-count">0</span>
-                        </li>
+                    <?php
+                        $temp = [];
+                        foreach ($tasks as $value) {
+                            if (!in_array($value['type'], $temp))
+                                array_push($temp, $value['type']);
+                        }
+                        for ($i = 0; $i < count($temp); $i++) {
+                            echo'
+                            <li class="main-navigation__list-item">
+                                <a class="main-navigation__list-item-link" href="#">'. $temp[$i] .'</a>
+                                <span class="main-navigation__list-item-count">0</span>
+                            </li>';
+                        }
+                    ?>
                     </ul>
                 </nav>
 
@@ -100,6 +149,35 @@ $show_complete_tasks = rand(0, 1);
                         <td class="task__date"></td>
                     </tr>
                     <?php
+                        foreach ($tasks as $value) {
+                            if ($value['complete'] && $show_complete_tasks == 1){
+                                continue;
+                                echo'<tr class="tasks__item task task--completed">
+                                <td class="task__select">
+                                    <label class="checkbox task__checkbox">
+                                        <input class="checkbox__input visually-hidden" type="checkbox" checked>
+                                        <span class="checkbox__text">'. $value['name'] .'</span>
+                                    </label>
+                                </td>
+                                <td class="task__date">'. $value['deadline'] .'</td>
+                                <td class="task__controls"></td>
+                                </tr>';
+                            }
+                            else {
+                                echo'<tr class="tasks__item task">
+                                <td class="task__select">
+                                    <label class="checkbox task__checkbox">
+                                        <input class="checkbox__input visually-hidden" type="checkbox">
+                                        <span class="checkbox__text">'. $value['name'] .'</span>
+                                    </label>
+                                </td>
+                                <td class="task__date">'. $value['deadline'] .'</td>
+                                <td class="task__controls"></td>
+                                </tr>';
+                            }
+
+                        }
+
                         if ($show_complete_tasks == 1){
                             echo'<tr class="tasks__item task task--completed">
                             <td class="task__select">
@@ -112,7 +190,7 @@ $show_complete_tasks = rand(0, 1);
                             <td class="task__controls"></td>
                         </tr>';
                         }
-                    ?>
+                        ?>
                 </table>
             </main>
         </div>

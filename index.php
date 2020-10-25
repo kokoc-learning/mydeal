@@ -36,7 +36,19 @@ $task = array (
            "Выполнен" => "")
 );
 
+
+function taskCount($project_item, $task) {
+    $task_count = 0;                
+    foreach ($task as $value) {           
+        if ($project_item == $value["Категория"]) {
+            $task_count++;                
+        }         
+    }   
+    return $task_count;
+}
+
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -78,10 +90,11 @@ $task = array (
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
                         <? for ($i = 0; $i < count($project); $i++) {
+                        $project_item = $project[$i];
                         echo'<li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#">'
-                             .$project[$i].'</a>
-                            <span class="main-navigation__list-item-count">0</span>
+                             .$project_item.'</a>
+                            <span class="main-navigation__list-item-count">'.taskCount($project_item, $task).'</span>
                         </li>'; } ?>
                     </ul>
                 </nav>

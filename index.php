@@ -164,7 +164,7 @@ $tasks = array(
                                 }
                             }
 
-                            if ($flag)
+                            if ($flag){
                                 echo'<tr class="tasks__item'. $complete_class .'">
                                 <td class="task__select">
                                     <label class="checkbox task__checkbox">
@@ -175,10 +175,8 @@ $tasks = array(
                                 <td class="task__date">'. $value['deadline'] .'</td>
                                 <td class="task__controls"></td>
                                 </tr>';
-                            else {
-                                continue;
-                            }
                         }
+                    }
                         ?>
                 </table>
             </main>

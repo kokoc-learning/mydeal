@@ -57,14 +57,8 @@ include('data.php');
 
                     <label class="checkbox">
                         <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
-                        <?php 
-                        if ($show_complete_tasks == 1){
-                            echo '<input class="checkbox__input visually-hidden show_completed" type="checkbox" checked>';
-                        }
-                        else { 
-                            echo '<input class="checkbox__input visually-hidden show_completed" type="checkbox">';
-                        };
-                        ?>
+                        <input class="checkbox__input visually-hidden show_completed" type="checkbox" 
+                            <? if ($show_complete_tasks == 1) echo "checked"; ?>>
                         <span class="checkbox__text">Показывать выполненные</span>
                     </label>
                 </div>
@@ -85,47 +79,31 @@ include('data.php');
                         <td class="task__date"></td>
                     </tr>
                     <?php
+                        $complete_class = ' ';
+                        $checked = ' ';
+                        $flag = true;
                         foreach ($tasks as $value) {
-                            if ($value['complete'] && $show_complete_tasks == 1){
-                                continue;
-                                echo'<tr class="tasks__item task task--completed">
+                            if ($value['complete']){
+                                $complete_class = ' task task--completed';
+                                $checked = ' checked';
+                                if ($show_complete_tasks == 0) {
+                                    $flag = false;
+                                }
+                            }
+
+                            if ($flag){
+                                echo'<tr class="tasks__item'. $complete_class .'">
                                 <td class="task__select">
                                     <label class="checkbox task__checkbox">
-                                        <input class="checkbox__input visually-hidden" type="checkbox" checked>
+                                        <input class="checkbox__input visually-hidden" type="checkbox"' . $checked . '>
                                         <span class="checkbox__text">'. $value['name'] .'</span>
                                     </label>
                                 </td>
                                 <td class="task__date">'. $value['deadline'] .'</td>
                                 <td class="task__controls"></td>
                                 </tr>';
-                            }
-                            else {
-                                echo'<tr class="tasks__item task">
-                                <td class="task__select">
-                                    <label class="checkbox task__checkbox">
-                                        <input class="checkbox__input visually-hidden" type="checkbox">
-                                        <span class="checkbox__text">'. $value['name'] .'</span>
-                                    </label>
-                                </td>
-                                <td class="task__date">'. $value['deadline'] .'</td>
-                                <td class="task__controls"></td>
-                                </tr>';
-                            }
-
                         }
-
-                        if ($show_complete_tasks == 1){
-                            echo'<tr class="tasks__item task task--completed">
-                            <td class="task__select">
-                                <label class="checkbox task__checkbox">
-                                    <input class="checkbox__input visually-hidden" type="checkbox" checked>
-                                    <span class="checkbox__text">Записаться на интенсив "Базовый PHP"</span>
-                                </label>
-                            </td>
-                            <td class="task__date">10.10.2019</td>
-                            <td class="task__controls"></td>
-                        </tr>';
-                        }
+                    }
                         ?>
                 </table>
             </main>

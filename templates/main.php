@@ -2,7 +2,7 @@
 function task_count($task_list, $project) {
     $count = 0;
     foreach($task_list as $value) {
-        if ($value['type'] == $project)
+        if ($value['project_name'] == $project)
             $count++;
     }
     return $count;

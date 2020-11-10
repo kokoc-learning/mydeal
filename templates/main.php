@@ -20,6 +20,7 @@ function check_time($date) {
 
 $show_complete_tasks = rand(0, 1);
     include('data.php');
+
 ?>
 
 <section class="content__side">
@@ -29,23 +30,52 @@ $show_complete_tasks = rand(0, 1);
                     <ul class="main-navigation__list">
                     <?php
                         $temp = [];
+                        $temp_id = [];
+                        $target_class = '';
+
                         foreach ($projects as $value) {
                             if (!in_array($value['project_name'], $temp))
                                 array_push($temp, $value['project_name']);
+                                
+                            if (!in_array($value['id'], $temp))
+                                array_push($temp_id, $value['id']);
+
                         }
+                        $temp_id = array_unique($temp_id);
+                        $id = [];
+                        foreach ($temp_id as $param) {
+                            $id[] = $param;
+                        }
+
+                        if (!in_array($_GET['id'], $id) && $_GET['id'] != '') {
+                            header('Location: /error404/');
+                        }
+
                         for ($i = 0; $i < count($temp); $i++) {
+                            if(isset($_GET['id']) && $_GET['id'] != '' && $id[$i] == $_GET['id']) {
+                                $target_class = ' main-navigation__list-item--active';
+
+                            }   
+                            else{
+                                $target_class = '';
+                            }
+                           
+                            $url = "index.php?id=" . $id[$i];
                             echo'
-                            <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link" href="#">'. $temp[$i] .'</a>
+                            <li class="main-navigation__list-item ' . $target_class . '">
+                                <a class="main-navigation__list-item-link" href="'. $url .'">'. $temp[$i] .'</a>
                                 <span class="main-navigation__list-item-count">'. task_count($tasks, $temp[$i]) .'</span>
                             </li>';
+                            if (task_count($tasks, $temp[$i]) == 0  && $_GET['id'] != '') {
+                                header('Location: /error404/');
+                            }
                         }
                     ?>
                     </ul>
                 </nav>
 
                 <a class="button button--transparent button--plus content__side-button"
-                   href="pages/form-project.html" target="project_add">Добавить проект</a>
+                   href="add.php" target="project_add">Добавить проект</a>
             </section>
 
             <main class="content__main">
@@ -89,10 +119,29 @@ $show_complete_tasks = rand(0, 1);
                         <td class="task__date"></td>
                     </tr>
                     <?php
+                        $id = $_GET['id'];
+                        $temp_tasks = [];
+                        if(isset($id) && $id != '') {
+                            $query = "SELECT P.project_name FROM projects P JOIN users U ON P.autor = 'Cat' WHERE P.id = '$id'";
+                            $result = mysqli_query($connect, $query);
+                            $find = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                            $name = $find[0]['project_name'];
+                            
+                            $query1 = "SELECT T.task_name, T.project_name, T.deadline from tasks T 
+                            WHERE T.autor = 'Cat' AND T.project_name = '$name'";
+                            $result1 = mysqli_query($connect, $query1);
+                            $end = mysqli_fetch_all($result1, MYSQLI_ASSOC);
+                            foreach ($end as $res) {
+                                $temp_tasks[] = $res;
+                            }
+                        }
+                        else {
+                            $temp_tasks = $tasks;
+                        }
                         $complete_class = ' ';
                         $checked = ' ';
                         $flag = true;
-                        foreach ($tasks as $value) {
+                        foreach ($temp_tasks as $value) {
                             if ($value['complete']){
                                 $complete_class = ' task task--completed';
                                 $checked = ' checked';

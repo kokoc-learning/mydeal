@@ -1,11 +1,12 @@
 <?php
+    $get_id = $GET['get_id'];
     $connect = mysqli_connect("localhost", "root", "root", "mydeal");
 
     if (!$connect) {
         print("Ошибка" . mysqli_connect_error());
     }
 
-    $project_query = "SELECT U.user_name, P.project_name FROM projects P JOIN users U ON P.autor = 'Cat'";
+    $project_query = "SELECT U.user_name, P.project_name, P.id FROM projects P JOIN users U ON P.autor = 'Cat'";
     $project_result = mysqli_query($connect, $project_query);
     $projects = mysqli_fetch_all($project_result, MYSQLI_ASSOC);
 

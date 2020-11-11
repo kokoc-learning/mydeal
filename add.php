@@ -1,4 +1,10 @@
 <?php
+  include('data.php');
+
+  date_default_timezone_set('Europe/Moscow');
+  $now = date('Y-m-d', time());
+
+
     function task_count($task_list, $project) {
         $count = 0;
         foreach($task_list as $value) {
@@ -12,8 +18,68 @@
       return $_POST[$name] ?? "";
     }
 
-    include('data.php');
+    function validateEmail($name) {
+      if (!filter_input(INPUT_POST, $name, FILTER_VALIDATE_EMAIl)){
+        return "Введите корректный email";
+      }
+    }
 
+    function validateFilled($name) {
+      if (empty($_POST['name'])){
+        return "Это поле должно быть заполнено";
+      }
+    }
+
+    function isCorrectLength($name, $min, $max) {
+      $len = strlen($_POST['name']);
+
+      if ($len < $min or $len > $max){
+        return "Значение должно быть от $min до $max символов";
+      }
+    }
+
+    function xss_text($str) {
+      $text = htmlspecialchars($str);
+
+      return $text;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['submit_form']){
+      $required = ['name', 'project'];
+      $errors = [];
+      foreach ($required as $check) {
+        if (validateFilled($_POST[$check])){
+          $errors[$check] = 'Введите корректное значение поля';
+        }
+        if ($check == 'project' && $_POST[$check] == '') {
+          $errors[$check] = 'Выберите проект';
+        }
+      }
+      $_POST['name'] = xss_text($_POST['name']);
+
+      if (isset($_FILES['file'])){
+        $file_name = $_FILES['file']['name'];
+        $file_path = __DIR__ . '/uploads/';
+        $file_url = '/uploads/' . $file_name;
+
+        move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
+      }
+      $project = $_POST['project'];
+      $name = $_POST['name'];
+      $date = $_POST['date'];
+      if (empty($errors)) {
+        if ($_POST['date'] == ''){
+          $new_task_query = "INSERT INTO tasks (project_name, autor, start_date, status, task_name, link, deadline) VALUES('$project', 'Cat',
+        '$now', 0, '$name', '$file_url', NULL)";
+        }
+        else {
+          $new_task_query = "INSERT INTO tasks (project_name, autor, start_date, status, task_name, link, deadline) VALUES('$project', 'Cat',
+        '$now', 0, '$name', '$file_url', $date)";
+        }
+        $use_query = mysqli_query($connect, $new_task_query);
+        header('Location:  index.php');
+      }
+    }   
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +87,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Document</title>
+  <title>Добавить задачу</title>
   <link rel="stylesheet" href="../css/normalize.css">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/flatpickr.min.css">
@@ -33,12 +99,12 @@
 <div class="page-wrapper">
   <div class="container container--with-sidebar">
     <header class="main-header">
-      <a href="#">
+      <a href="index.php">
         <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
       </a>
 
       <div class="main-header__side">
-        <a class="main-header__side-item button button--plus" href="form-task.html">Добавить задачу</a>
+        <a class="main-header__side-item button button--plus" href="add.php">Добавить задачу</a>
 
         <div class="main-header__side-item user-menu">
           <div class="user-menu__data">
@@ -77,25 +143,24 @@
                     </ul>
                 </nav>
 
-        <a class="button button--transparent button--plus content__side-button" href="add.php">Добавить проект</a>
-      </section>
-      
+        <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
+      </section>           
       <main class="content__main">
-        <?php if (!empty($fields)) echo '<p class="form__message">'. $errors['name'] .'</p>'; ?>
+        <?php if (!empty($errors)) echo '<p class="form__message">'. $errors['name'] . '<br>' . $errors['project'] .'</p>'; ?>
         <h2 class="content__main-heading">Добавление задачи</h2>
 
         <form class="form"  action="add.php" method="post" autocomplete="off">
           <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
-
-            <input class="form__input" type="text" name="name" id="name" value="<?php getPostVal('name') ?>" placeholder="Введите название"
-            <?php if (!empty($fields)) echo "form__input--error"; ?>>
+            <input class="form__input <?php if (!empty($errors['name'])) echo "form__input--error"; ?>" 
+            type="text" name="name" id="name" value="<?php getPostVal('name') ?>" placeholder="Введите название">
           </div>
 
           <div class="form__row">
             <label class="form__label" for="project">Проект <sup>*</sup></label>
 
-            <select class="form__input form__input--select" name="project" id="project">
+            <select class="form__input form__input--select <?php if (!empty($errors['project'])) echo "form__input--error"; ?> " name="project" id="project">
+            <option value="">Выберите проект</option>
             <?php
                         $temp = [];
                         foreach ($projects as $value) {
@@ -104,7 +169,7 @@
                         }
                         for ($i = 0; $i < count($temp); $i++) {
                             echo'
-                            <option value="">'. $temp[$i] .'</option>';
+                            <option value="'. $temp[$i] .'">'. $temp[$i] .'</option>';
                         }
                     ?>
               
@@ -130,16 +195,9 @@
           </div>
 
           <div class="form__row form__row--controls">
-            <input class="button" type="submit" name="" value="Добавить">
+            <input class="button" type="submit" name="submit_form" value="Добавить">
           </div>
-          <?php
-          $fields = ['name'];
-          $errors = [];
-            if (empty($_GET['name'])) {
-              $errors['name'] = 'Поле не заполнено';
-            }
 
-          ?>
         </form>
       </main>
     </div>
@@ -154,7 +212,7 @@
       <p>Веб-приложение для удобного ведения списка дел.</p>
     </div>
 
-    <a class="main-footer__button button button--plus" href="form-task.html">Добавить задачу</a>
+    <a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>
 
     <div class="main-footer__social social">
       <span class="visually-hidden">Мы в соцсетях:</span>

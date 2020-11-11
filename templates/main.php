@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('Europe/Moscow');
+
 function task_count($task_list, $project) {
     $count = 0;
     foreach($task_list as $value) {
@@ -54,7 +56,6 @@ $show_complete_tasks = rand(0, 1);
                         for ($i = 0; $i < count($temp); $i++) {
                             if(isset($_GET['id']) && $_GET['id'] != '' && $id[$i] == $_GET['id']) {
                                 $target_class = ' main-navigation__list-item--active';
-
                             }   
                             else{
                                 $target_class = '';
@@ -66,16 +67,17 @@ $show_complete_tasks = rand(0, 1);
                                 <a class="main-navigation__list-item-link" href="'. $url .'">'. $temp[$i] .'</a>
                                 <span class="main-navigation__list-item-count">'. task_count($tasks, $temp[$i]) .'</span>
                             </li>';
-                            if (task_count($tasks, $temp[$i]) == 0  && $_GET['id'] != '') {
-                                header('Location: /error404/');
-                            }
+
+                            // if (task_count($tasks, $temp[$i]) == 0 && $_GET['id'] != '') {
+                            //     header('Location: /error404/');
+                            // }
                         }
                     ?>
                     </ul>
                 </nav>
 
                 <a class="button button--transparent button--plus content__side-button"
-                   href="add.php" target="project_add">Добавить проект</a>
+                   href="#" target="project_add">Добавить проект</a>
             </section>
 
             <main class="content__main">

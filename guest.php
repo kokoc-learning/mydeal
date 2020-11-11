@@ -1,66 +1,20 @@
-<?php
-    include('data.php');
-    date_default_timezone_set('Europe/Moscow');
-    $now = date('Y-m-d', time());
-
-    function validateEmail($name) {
-        if (filter_var($name, FILTER_VALIDATE_EMAIL)) {
-            return true;
-        }
-        return false;
-      }
-
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['reg_button']){
-        $required = ['email', 'password', 'name'];
-        $errors = [];
-        foreach ($required as $check) {
-            if (empty($_POST[$check])){
-              $errors[$check] = 'Заполните поле!';
-            }
-            if ($check == 'email') {
-                if(!validateEmail($_POST[$check])){
-                    $errors[$check] = 'Введите корректный email!';
-                }
-            }    
-          }
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        if (empty($errors)) {
-            $email_query = "SELECT id FROM users WHERE email = '$email'";
-            $checked = mysqli_query($connect, $email_query);
-            if (mysqli_num_rows($checked) > 0) {
-                $errors['email'] = 'Пользователь с таким именем уже существует';
-            }
-            else {
-                $new_user_query = "INSERT INTO users (registration_date, email, user_name, pass) VALUES('$now', '$email', '$name',
-                '$password')";
-                $use_query = mysqli_query($connect, $new_user_query);
-                if ($use_query  && empty($errors)) {
-                    header('Location:  index.php');
-                }
-            }     
-        }
-    }
-?> 
-
 <!DOCTYPE html>
 <html lang="ru">
 
 <head>
   <meta charset="UTF-8">
-  <title>Регистрация</title>
+  <title>Добро пожаловать</title>
   <link rel="stylesheet" href="../css/normalize.css">
   <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body>
+<body class="body-background">
   <h1 class="visually-hidden">Дела в порядке</h1>
 
   <div class="page-wrapper">
-    <div class="container container--with-sidebar">
+    <div class="container">
       <header class="main-header">
-        <a href="index.php">
+        <a href="#">
           <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
         </a>
 
@@ -70,59 +24,17 @@
       </header>
 
       <div class="content">
-        <section class="content__side">
-          <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
+        <section class="welcome">
+          <h2 class="welcome__heading">«Дела в порядке»</h2>
 
-          <a class="button button--transparent content__side-button" href="auth.php">Войти</a>
+          <div class="welcome__text">
+            <p>«Дела в порядке» — это веб приложение для удобного ведения списка дел. Сервис помогает пользователям не забывать о предстоящих важных событиях и задачах.</p>
+
+            <p>После создания аккаунта, пользователь может начать вносить свои дела, деля их по проектам и указывая сроки.</p>
+          </div>
+
+          <a class="welcome__button button" href="register.php">Зарегистрироваться</a>
         </section>
-
-        <main class="content__main">
-          <h2 class="content__main-heading">Регистрация аккаунта</h2>
-
-          <form class="form" action="register.php" method="post" autocomplete="off">
-            <div class="form__row">
-              <label class="form__label" for="email">E-mail <sup>*</sup></label>
-              <?php 
-                $error_class = '';
-                if (!empty($errors['email'])) {
-                    $error_class = ' form__input--error';  
-                    echo '<p class="form__message">' . $errors['email'] . '</p>';
-                }
-                    echo '<input class="form__input ' . $error_class . '" type="text" name="email" id="email" value="" placeholder="Введите e-mail">';
-                ?>
-              
-            </div>
-
-            <div class="form__row">
-              <label class="form__label" for="password">Пароль <sup>*</sup></label>
-              <?php 
-                $error_class = '';
-                if (!empty($errors['password'])) {
-                    $error_class = ' form__input--error';  
-                    echo '<p class="form__message">' . $errors['password'] . '</p>';
-                }
-                    echo '<input class="form__input ' . $error_class . '" type="password" name="password" id="password" value="" placeholder="Введите пароль">';
-            ?>
-            </div>
-
-            <div class="form__row">
-              <label class="form__label" for="name">Имя <sup>*</sup></label>
-              <?php 
-                $error_class = '';
-                if (!empty($errors['name'])) {
-                    $error_class = ' form__input--error';  
-                    echo '<p class="form__message">' . $errors['name'] . '</p>';
-                }
-                 echo '<input class="form__input' . $error_class . '" type="text" name="name" id="name" value="" placeholder="Введите пароль">';
-              ?>
-            </div>
-
-            <div class="form__row form__row--controls">
-
-              <input class="button" type="submit" name="reg_button" value="Зарегистрироваться">
-            </div>
-          </form>
-        </main>
       </div>
     </div>
   </div>
@@ -183,5 +95,6 @@
       </div>
     </div>
   </footer>
+
 </body>
 </html>

@@ -124,13 +124,13 @@ $show_complete_tasks = rand(0, 1);
                         $id = $_GET['id'];
                         $temp_tasks = [];
                         if(isset($id) && $id != '') {
-                            $query = "SELECT P.project_name FROM projects P JOIN users U ON P.autor = 'Cat' WHERE P.id = '$id'";
+                            $query = "SELECT P.project_name FROM projects P JOIN users U ON P.autor = '$user' WHERE P.id = '$id'";
                             $result = mysqli_query($connect, $query);
                             $find = mysqli_fetch_all($result, MYSQLI_ASSOC);
                             $name = $find[0]['project_name'];
                             
                             $query1 = "SELECT T.task_name, T.project_name, T.deadline from tasks T 
-                            WHERE T.autor = 'Cat' AND T.project_name = '$name'";
+                            WHERE T.autor = '$user' AND T.project_name = '$name'";
                             $result1 = mysqli_query($connect, $query1);
                             $end = mysqli_fetch_all($result1, MYSQLI_ASSOC);
                             foreach ($end as $res) {

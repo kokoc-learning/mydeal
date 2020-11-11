@@ -1,16 +1,18 @@
 <?php
+    session_start();
     $get_id = $GET['get_id'];
+    $user = $_SESSION['user'];
     $connect = mysqli_connect("localhost", "root", "root", "mydeal");
 
     if (!$connect) {
         print("Ошибка" . mysqli_connect_error());
     }
 
-    $project_query = "SELECT U.user_name, P.project_name, P.id FROM projects P JOIN users U ON P.autor = 'Cat'";
+    $project_query = "SELECT U.user_name, P.project_name, P.id FROM projects P JOIN users U ON P.autor = '$user'";
     $project_result = mysqli_query($connect, $project_query);
     $projects = mysqli_fetch_all($project_result, MYSQLI_ASSOC);
 
-    $task_query = "SELECT T.task_name, T.project_name, T.deadline from tasks T WHERE T.autor = 'Cat'";
+    $task_query = "SELECT T.task_name, T.project_name, T.deadline from tasks T WHERE T.autor = '$user'";
     $task_result = mysqli_query($connect, $task_query);
     $tasks = mysqli_fetch_all($task_result, MYSQLI_ASSOC);
 

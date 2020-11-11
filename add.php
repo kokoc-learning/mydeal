@@ -69,11 +69,11 @@
       $date = $_POST['date'];
       if (empty($errors)) {
         if ($_POST['date'] == ''){
-          $new_task_query = "INSERT INTO tasks (project_name, autor, start_date, status, task_name, link, deadline) VALUES('$project', 'Cat',
+          $new_task_query = "INSERT INTO tasks (project_name, autor, start_date, status, task_name, link, deadline) VALUES('$project', '$user',
         '$now', 0, '$name', '$file_url', NULL)";
         }
         else {
-          $new_task_query = "INSERT INTO tasks (project_name, autor, start_date, status, task_name, link, deadline) VALUES('$project', 'Cat',
+          $new_task_query = "INSERT INTO tasks (project_name, autor, start_date, status, task_name, link, deadline) VALUES('$project', '$user',
         '$now', 0, '$name', '$file_url', $date)";
         }
         $use_query = mysqli_query($connect, $new_task_query);

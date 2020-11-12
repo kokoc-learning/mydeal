@@ -1,0 +1,7 @@
+{
+    "name": "kirill/project",
+    "type": "project",
+    "require": {
+        "swiftmailer/swiftmailer": "^6.2"
+    }
+}

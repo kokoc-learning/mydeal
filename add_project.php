@@ -79,10 +79,10 @@
 
         <div class="main-header__side-item user-menu">
           <div class="user-menu__data">
-            <p>Константин</p>
+            <p><?php echo $_SESSION['user']; ?></p>
 
-            <a href="#">Выйти</a>
-          </div>
+            <a href="logout.php">Выйти</a>
+         </div>
         </div>
       </div>
     </header>
@@ -114,7 +114,7 @@
                     </ul>
                 </nav>
 
-        <a class="button button--transparent button--plus content__side-button" href="#">Добавить задачу</a>
+        <a class="button button--transparent button--plus content__side-button" href="add.php">Добавить задачу</a>
       </section>           
       <main class="content__main">
         <?php if (!empty($errors)) echo '<p class="form__message">'. $errors['name'] . '<br>' . $errors['project'] .'</p>'; 

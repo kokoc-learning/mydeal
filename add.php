@@ -107,11 +107,11 @@
         <a class="main-header__side-item button button--plus" href="add.php">Добавить задачу</a>
 
         <div class="main-header__side-item user-menu">
-          <div class="user-menu__data">
-            <p>Константин</p>
+            <div class="user-menu__data">
+              <p><?php echo $_SESSION['user']; ?></p>
 
-            <a href="#">Выйти</a>
-          </div>
+              <a href="logout.php">Выйти</a>
+            </div>
         </div>
       </div>
     </header>
@@ -143,7 +143,7 @@
                     </ul>
                 </nav>
 
-        <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
+        <a class="button button--transparent button--plus content__side-button" href="project_add.php">Добавить проект</a>
       </section>           
       <main class="content__main">
         <?php if (!empty($errors)) echo '<p class="form__message">'. $errors['name'] . '<br>' . $errors['project'] .'</p>'; ?>

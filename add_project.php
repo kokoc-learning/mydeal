@@ -1,9 +1,10 @@
 <?php
   include('data.php');
 
+
   date_default_timezone_set('Europe/Moscow');
   $now = date('Y-m-d', time());
-
+  $user = $_SESSION['user'];
 
     function task_count($task_list, $project) {
         $count = 0;
@@ -18,23 +19,9 @@
       return $_POST[$name] ?? "";
     }
 
-    function validateEmail($name) {
-      if (!filter_input(INPUT_POST, $name, FILTER_VALIDATE_EMAIl)){
-        return "Введите корректный email";
-      }
-    }
-
     function validateFilled($name) {
       if (empty($_POST['name'])){
         return "Это поле должно быть заполнено";
-      }
-    }
-
-    function isCorrectLength($name, $min, $max) {
-      $len = strlen($_POST['name']);
-
-      if ($len < $min or $len > $max){
-        return "Значение должно быть от $min до $max символов";
       }
     }
 
@@ -43,41 +30,25 @@
 
       return $text;
     }
-
+    $name = $_POST['name'];
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['submit_form']){
-      $required = ['name', 'project'];
       $errors = [];
-      foreach ($required as $check) {
-        if (validateFilled($_POST[$check])){
+        if (validateFilled($name)){
           $errors[$check] = 'Введите корректное значение поля';
         }
-        if ($check == 'project' && $_POST[$check] == '') {
-          $errors[$check] = 'Выберите проект';
-        }
-      }
-      $_POST['name'] = xss_text($_POST['name']);
+        $name = xss_text($name);
 
-      if (isset($_FILES['file'])){
-        $file_name = $_FILES['file']['name'];
-        $file_path = __DIR__ . '/uploads/';
-        $file_url = '/uploads/' . $file_name;
-
-        move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
-      }
-      $project = $_POST['project'];
-      $name = $_POST['name'];
-      $date = $_POST['date'];
-      if (empty($errors)) {
-        if ($_POST['date'] == ''){
-          $new_task_query = "INSERT INTO tasks (project_name, autor, start_date, status, task_name, link, deadline) VALUES('$project', '$user',
-        '$now', 0, '$name', '$file_url', NULL)";
+      if (empty($errors) && !empty($user)) {
+        $check_query = "SELECT 1 FROM projects WHERE project_name = '$name'";
+        $use_check_query = mysqli_query($connect, $check_query);
+        if (mysqli_num_rows($use_check_query) == 0){
+          $new_task_query = "INSERT INTO projects (project_name, autor) VALUES('$name', '$user')";
+          $use_query = mysqli_query($connect, $new_task_query);
+          header('Location:  index.php');
         }
         else {
-          $new_task_query = "INSERT INTO tasks (project_name, autor, start_date, status, task_name, link, deadline) VALUES('$project', '$user',
-        '$now', 0, '$name', '$file_url', '$date')";
+          $errors['project'] = 'Такой проект уже существует';
         }
-        $use_query = mysqli_query($connect, $new_task_query);
-        header('Location:  index.php');
       }
     }   
 ?>
@@ -87,7 +58,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Добавить задачу</title>
+  <title>Добавить проект</title>
   <link rel="stylesheet" href="../css/normalize.css">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/flatpickr.min.css">
@@ -143,55 +114,21 @@
                     </ul>
                 </nav>
 
-        <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
+        <a class="button button--transparent button--plus content__side-button" href="#">Добавить задачу</a>
       </section>           
       <main class="content__main">
-        <?php if (!empty($errors)) echo '<p class="form__message">'. $errors['name'] . '<br>' . $errors['project'] .'</p>'; ?>
-        <h2 class="content__main-heading">Добавление задачи</h2>
+        <?php if (!empty($errors)) echo '<p class="form__message">'. $errors['name'] . '<br>' . $errors['project'] .'</p>'; 
+          if (empty($user)) {
+            echo 'Добавлять проекты могут только авторизованные пользователи';
+          }
+        ?>
+        <h2 class="content__main-heading">Добавление проекта</h2>
 
-        <form class="form"  action="add.php" method="post" autocomplete="off">
+        <form class="form"  action="add_project.php" method="post" autocomplete="off">
           <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
             <input class="form__input <?php if (!empty($errors['name'])) echo "form__input--error"; ?>" 
             type="text" name="name" id="name" value="<?php getPostVal('name') ?>" placeholder="Введите название">
-          </div>
-
-          <div class="form__row">
-            <label class="form__label" for="project">Проект <sup>*</sup></label>
-
-            <select class="form__input form__input--select <?php if (!empty($errors['project'])) echo "form__input--error"; ?> " name="project" id="project">
-            <option value="">Выберите проект</option>
-            <?php
-                        $temp = [];
-                        foreach ($projects as $value) {
-                            if (!in_array($value['project_name'], $temp))
-                                array_push($temp, $value['project_name']);
-                        }
-                        for ($i = 0; $i < count($temp); $i++) {
-                            echo'
-                            <option value="'. $temp[$i] .'">'. $temp[$i] .'</option>';
-                        }
-                    ?>
-              
-            </select>
-          </div>
-
-          <div class="form__row">
-            <label class="form__label" for="date">Дата выполнения</label>
-
-            <input class="form__input form__input--date" type="text" name="date" id="date" value="<?php getPostVal('date') ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
-          </div>
-
-          <div class="form__row">
-            <label class="form__label" for="file">Файл</label>
-
-            <div class="form__input-file">
-              <input class="visually-hidden" type="file" name="file" id="file" value="">
-
-              <label class="button button--transparent" for="file">
-                <span>Выберите файл</span>
-              </label>
-            </div>
           </div>
 
           <div class="form__row form__row--controls">
@@ -211,8 +148,6 @@
 
       <p>Веб-приложение для удобного ведения списка дел.</p>
     </div>
-
-    <a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>
 
     <div class="main-footer__social social">
       <span class="visually-hidden">Мы в соцсетях:</span>

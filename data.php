@@ -12,7 +12,7 @@
     $project_result = mysqli_query($connect, $project_query);
     $projects = mysqli_fetch_all($project_result, MYSQLI_ASSOC);
 
-    $task_query = "SELECT T.task_name, T.project_name, T.deadline from tasks T WHERE T.autor = '$user'";
+    $task_query = "SELECT T.task_name, T.project_name, T.deadline, T.status from tasks T WHERE T.autor = '$user'";
     $task_result = mysqli_query($connect, $task_query);
     $tasks = mysqli_fetch_all($task_result, MYSQLI_ASSOC);
 

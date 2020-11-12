@@ -1,5 +1,7 @@
 <?php
 date_default_timezone_set('Europe/Moscow');
+$days = $_GET['list'];
+$active_class = ' tasks-switch__item--active';
 
 function task_count($task_list, $project) {
     $count = 0;
@@ -18,6 +20,22 @@ function check_time($date) {
         return true;
     }
     return false;
+}
+
+function dates_status($date) {
+    $today = strtotime("now");
+    $dead_line = strtotime($date);
+    $time_to_deadline = ($dead_line -  $today) / 3600;
+    if ($time_to_deadline > 0 && $time_to_deadline < 24){
+        return 2;
+    }
+    if ($time_to_deadline > -24 && $time_to_deadline < 0) {
+        return 1;
+    }
+    if ($today > $dead_line && isset($date)) {
+        return 3;
+    }
+    return 4;
 }
 
 $show_complete_tasks = rand(0, 1);
@@ -77,7 +95,7 @@ $show_complete_tasks = rand(0, 1);
                 </nav>
 
                 <a class="button button--transparent button--plus content__side-button"
-                   href="#" target="project_add">Добавить проект</a>
+                   href="add_project.php" target="project_add">Добавить проект</a>
             </section>
 
             <main class="content__main">
@@ -90,10 +108,10 @@ $show_complete_tasks = rand(0, 1);
 
                 <div class="tasks-controls">
                     <nav class="tasks-switch">
-                        <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-                        <a href="/" class="tasks-switch__item">Повестка дня</a>
-                        <a href="/" class="tasks-switch__item">Завтра</a>
-                        <a href="/" class="tasks-switch__item">Просроченные</a>
+                        <a href="index.php" class="tasks-switch__item <?php if (!isset($days)) echo $active_class; ?>">Все задачи</a>
+                        <a href="index.php?list=1" class="tasks-switch__item <?php if ($days == 1) echo $active_class; ?>">Повестка дня</a>
+                        <a href="index.php?list=2" class="tasks-switch__item <?php if ($days == 2) echo $active_class; ?>">Завтра</a>
+                        <a href="index.php?list=3" class="tasks-switch__item <?php if ($days == 3) echo $active_class; ?>">Просроченные</a>
                     </nav>
 
                     <label class="checkbox">
@@ -114,7 +132,7 @@ $show_complete_tasks = rand(0, 1);
                             $find = mysqli_fetch_all($result, MYSQLI_ASSOC);
                             $name = $find[0]['project_name'];
                             
-                            $query1 = "SELECT T.task_name, T.project_name, T.deadline from tasks T 
+                            $query1 = "SELECT T.task_name, T.project_name, T.deadline, T.status from tasks T 
                             WHERE T.autor = '$user' AND T.project_name = '$name'";
                             $result1 = mysqli_query($connect, $query1);
                             $end = mysqli_fetch_all($result1, MYSQLI_ASSOC);
@@ -138,27 +156,35 @@ $show_complete_tasks = rand(0, 1);
                             }
                             
                         }
-                        $complete_class = ' ';
-                        $checked = ' ';
-                        $flag = true;
+
                         foreach ($temp_tasks as $value) {
-                            if ($value['complete']){
-                                $complete_class = ' task task--completed';
-                                $checked = ' checked';
+                            $day_status = false;
+                            if (isset($days) && $days == dates_status($value['deadline'])){
+                                $day_status = true;
+                            }
+                            $complete_class = ' ';
+                            $checked = ' ';
+                            $flag = true;
+
+                            if ($value['status'] == 1){
                                 if ($show_complete_tasks == 0) {
                                     $flag = false;
                                 }
+                                $complete_class = ' task task--completed';
+                                $checked = ' checked';
                             }
-                            if (check_time($value['deadline']) && !empty($value['deadline'])) {
+                            if (check_time($value['deadline']) && !empty($value['deadline']) && $value['status'] != 1) {
                                 $complete_class = ' task task--important';
                             }
 
-                            if ($flag){
+                            if ($flag && $day_status || $flag && !isset($days)){
                                 echo'<tr class="tasks__item'. $complete_class .'">
                                 <td class="task__select">
                                     <label class="checkbox task__checkbox">
-                                        <input class="checkbox__input visually-hidden" type="checkbox"' . $checked . '>
-                                        <span class="checkbox__text">'. $value['task_name'] .'</span>
+                                        <form method="post" action="index.php">
+                                            <input class="checkbox__input visually-hidden" type="checkbox" name="complete" ' . $checked . '>
+                                            <span class="checkbox__text">'. $value['task_name'] .'</span>
+                                        </form>
                                     </label>
                                 </td>';
                                 if (!empty($value['link'])){
@@ -170,7 +196,7 @@ $show_complete_tasks = rand(0, 1);
                                 echo '<td class="task__date">'. $value['deadline'] .'</td>
                                 <td class="task__controls"></td>
                                 </tr>';
-                        }
+                            }
                     }
                         ?>
                 </table>

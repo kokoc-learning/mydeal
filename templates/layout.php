@@ -29,7 +29,7 @@ $id = $GET['get_id'];
 
                 <div class="main-header__side-item user-menu">
                     <div class="user-menu__data">
-                        <p><?php $_SESSION['user'] ?></p>
+                        <p><?php echo $_SESSION['user']; ?></p>
 
                         <a href="logout.php">Выйти</a>
                     </div>

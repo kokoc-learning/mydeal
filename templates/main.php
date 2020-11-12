@@ -83,10 +83,9 @@ $show_complete_tasks = rand(0, 1);
             <main class="content__main">
                 <h2 class="content__main-heading">Список задач</h2>
 
-                <form class="search-form" action="index.php" method="post" autocomplete="off">
-                    <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
-
-                    <input class="search-form__submit" type="submit" name="" value="Искать">
+                <form class="search-form" action="index.php" method="get" autocomplete="off">
+                    <input class="search-form__input" type="text" name="search" value="" placeholder="Поиск по задачам">
+                    <input class="search-form__submit" type="submit" name="search_button" value="Искать">
                 </form>
 
                 <div class="tasks-controls">
@@ -106,20 +105,6 @@ $show_complete_tasks = rand(0, 1);
                 </div>
 
                 <table class="tasks">
-                    <tr class="tasks__item task">
-                        <td class="task__select">
-                            <label class="checkbox task__checkbox">
-                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                                <span class="checkbox__text">Сделать главную страницу Дела в порядке</span>
-                            </label>
-                        </td>
-
-                        <td class="task__file">
-                            <a class="download-link" href="#">Home.psd</a>
-                        </td>
-
-                        <td class="task__date"></td>
-                    </tr>
                     <?php
                         $id = $_GET['id'];
                         $temp_tasks = [];
@@ -139,6 +124,19 @@ $show_complete_tasks = rand(0, 1);
                         }
                         else {
                             $temp_tasks = $tasks;
+                        }
+                        $search_form = $_GET['search'];
+                        if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['search_button'] && isset($search_form)) {
+                            $find = "CREATE FULLTEXT INDEX tasks_search ON tasks(task_name)"; 
+                            mysqli_query($connect, $find);
+
+                            $sql = "SELECT project_name, task_name, deadline FROM tasks WHERE autor = '$user' AND MATCH(task_name) AGAINST('$search_form')";
+                            $search_query = mysqli_query($connect, $sql);
+                            $temp_tasks = mysqli_fetch_all($search_query, MYSQLI_ASSOC);
+                            if (empty($temp_tasks)) {
+                                echo "По вашему запросу ничего не найдено!";
+                            }
+                            
                         }
                         $complete_class = ' ';
                         $checked = ' ';
@@ -162,8 +160,14 @@ $show_complete_tasks = rand(0, 1);
                                         <input class="checkbox__input visually-hidden" type="checkbox"' . $checked . '>
                                         <span class="checkbox__text">'. $value['task_name'] .'</span>
                                     </label>
-                                </td>
-                                <td class="task__date">'. $value['deadline'] .'</td>
+                                </td>';
+                                if (!empty($value['link'])){
+                                    echo '<td class="task__file">
+                                    <a class="download-link" href="' . $value['link'] . '">Файл</a>
+                                    </td>';
+                                }
+
+                                echo '<td class="task__date">'. $value['deadline'] .'</td>
                                 <td class="task__controls"></td>
                                 </tr>';
                         }

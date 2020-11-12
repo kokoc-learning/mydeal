@@ -1,3 +1,11 @@
+<?php
+  include_once('data.php');
+  if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['formas']){
+    $_SESSION['user'] = 'Cat';
+    header('Location:  index.php');
+  }
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -34,6 +42,11 @@
           </div>
 
           <a class="welcome__button button" href="register.php">Зарегистрироваться</a>
+          <form action="guest.php" method="post">
+            <div class="form__row form__row--controls">
+              <input class="button" type="submit" name="formas" value="Стать котом">
+            </div>
+          </form>
         </section>
       </div>
     </div>

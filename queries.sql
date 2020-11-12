@@ -29,3 +29,6 @@ UPDATE tasks SET status = 1 WHERE task_name = 'Сдать экзамены';
 UPDATE tasks SET task_name = 'Купить новый стул' WHERE id = 5;
 
 
+CREATE FULLTEXT INDEX tasks_search ON tasks(task_name, deadline); 
+SELECT project_name, task_name, deadline FROM tasks WHERE MATCH(task_name) AGAINST(?);
+

@@ -41,6 +41,8 @@ function dates_status($date) {
 $show_complete_tasks = rand(0, 1);
     include('data.php');
 
+    
+
 ?>
 
 <section class="content__side">
@@ -160,6 +162,11 @@ $show_complete_tasks = rand(0, 1);
                         foreach ($temp_tasks as $value) {
                             $day_status = false;
                             if (isset($days) && $days == dates_status($value['deadline'])){
+                                if ($value['status'] != 1) {
+                                    $_SESSION['mail_user'] = $user;
+                                    $_SESSION['mail_tasks'] = $value['task_name'];
+                                    include_once('notify.php');
+                                }
                                 $day_status = true;
                             }
                             $complete_class = ' ';

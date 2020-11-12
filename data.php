@@ -1,5 +1,6 @@
 <?php
     session_start();
+    require_once("vendor/autoload.php");
     $get_id = $GET['get_id'];
     $user = $_SESSION['user'];
     $connect = mysqli_connect("localhost", "root", "root", "mydeal");
